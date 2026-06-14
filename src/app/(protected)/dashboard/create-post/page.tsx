@@ -108,8 +108,6 @@ export default function Page() {
           visibility:
             visibility === "Private"
               ? "PRIVATE"
-              : visibility === "Unlisted"
-                ? "UNLISTED"
                 : "PUBLIC",
           status,
           scheduledAt:
@@ -334,7 +332,7 @@ export default function Page() {
                     transition={{ duration: 0.15 }}
                     className={`absolute left-0 overflow-hidden z-100 bg-white top-full cursor-pointer w-[200px]  rounded-lg border  shadow-lg ${poppins.className}`}
                   >
-                    {["Public (default)", "Private", "Unlisted"].map((item) => (
+                    {["Public (default)", "Private"].map((item) => (
                       <button
                         className="w-full  px-4 py-3 text-left hover:bg-gray-100"
                         onClick={() => {
@@ -462,7 +460,7 @@ export default function Page() {
                   transition={{ duration: 0.15 }}
                   className={`absolute left-8 overflow-hidden z-25 bg-white cursor-pointer w-[200px]  rounded-lg border  shadow-lg ${poppins.className}`}
                 >
-                  {["Public (default)", "Private", "Unlisted"].map((item) => (
+                  {["Public (default)", "Private"].map((item) => (
                     <button
                       className="w-full  px-4 py-3 text-left hover:bg-gray-100"
                       onClick={() => {

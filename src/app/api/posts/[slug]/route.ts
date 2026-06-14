@@ -178,11 +178,33 @@ export async function DELETE(
     if (existingPost.authorId !== String(session.user.id)) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
-    await prisma.post.delete({
-      where: {
-        slug,
-      },
-    });
+    await prisma.$transaction([
+      prisma.postTag.deleteMany({
+        where: {
+          PostId: existingPost.id,
+        },
+      }),
+      prisma.postView.deleteMany({
+        where: {
+          postId: existingPost.id,
+        },
+      }),
+      prisma.like.deleteMany({
+        where: {
+          postId: existingPost.id,
+        },
+      }),
+      prisma.comment.deleteMany({
+        where: {
+          postId: existingPost.id,
+        },
+      }),
+      prisma.post.deleteMany({
+        where: {
+          slug,
+        },
+      }),
+    ]);
     return NextResponse.json(
       {
         message: "Post deleted Successfully",
@@ -190,8 +212,14 @@ export async function DELETE(
       { status: 200 },
     );
   } catch (error) {
+    console.error("DELETE Error");
+    console.dir(error, { depth: null });
     return NextResponse.json(
-      { error: "Something went wrong while deleting the post." },
+      {
+        error: "Something went wrong while deleting the post.",
+        details:
+          error instanceof Error ? error.stack : JSON.stringify(error, null, 2),
+      },
       { status: 500 },
     );
   }

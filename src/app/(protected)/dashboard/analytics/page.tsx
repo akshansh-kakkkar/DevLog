@@ -20,9 +20,9 @@ import { Geist, JetBrains_Mono } from "next/font/google";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
-import { Post } from "@/app/Types";
 import Link from "next/link";
 import DeleteModal from "./components/Modals/DeleteModal";
+import { Post } from "@/app/Types";
 const geist = Geist({
   subsets: ["latin"],
 });
@@ -41,6 +41,8 @@ export default function Page() {
     draftPending: 0,
     totalLikes: 0,
   });
+  const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
+
   useEffect(() => {
     const getStats = async () => {
       try {
@@ -343,7 +345,7 @@ export default function Page() {
                         <span className="hover:bg-[#00687a21] transition-all duration-300 p-2 rounded-lg cursor-pointer">
                           <Pencil />
                         </span>
-                        <button type="button" onClick={()=>setShowDeleteModal(true)} className="hover:bg-[#00687a21] rounded-lg p-2 cursor-pointer transition-all duration-300">
+                        <button type="button" onClick={()=>{setSelectedPostId(post.slug);setShowDeleteModal(true)}} className="hover:bg-[#00687a21] rounded-lg p-2 cursor-pointer transition-all duration-300">
                           <Trash2 />
                         </button>
                       </div>
@@ -374,7 +376,7 @@ export default function Page() {
           )}
         </div>
       )}
-      <DeleteModal isOpen={showDeleteModal} onClose={()=>{setShowDeleteModal(false)}} />
+      <DeleteModal  isOpen={showDeleteModal} slug={selectedPostId} onClose={()=>{setSelectedPostId(null);setShowDeleteModal(false)}} />
     </>
   );
 }
