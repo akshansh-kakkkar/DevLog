@@ -23,6 +23,8 @@ import { toast } from "sonner";
 import Link from "next/link";
 import DeleteModal from "./components/Modals/DeleteModal";
 import { Post } from "@/app/Types";
+import PostPieChart from "./components/PieChart";
+import PostBarGraph from "./components/BarGraph";
 const geist = Geist({
   subsets: ["latin"],
 });
@@ -93,7 +95,7 @@ export default function Page() {
   const [currentCard, setCurrentCard] = useState(0);
   const [posts, setposts] = useState<Post[]>([]);
   const [page, setPage] = useState(1);
-  const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [pagenation, setPagenation] = useState({
     currentPage: 1,
     totalPages: 1,
@@ -123,6 +125,32 @@ export default function Page() {
       maximumFractionDigits: 1,
     }).format(num);
   };
+  const publishCount = posts.filter(
+    (post) => post.status === "PUBLISHED",
+  ).length;
+  const draftCount = posts.filter((post) => post.status === "DRAFT").length;
+  const scheduleCount = posts.filter(
+    (post) => post.status === "SCHEDULED",
+  ).length;
+
+  const monthlyPosts = [
+    { month: "Jan", posts: 0 },
+    { month: "Feb", posts: 0 },
+    { month: "Mar", posts: 0 },
+    { month: "Apr", posts: 0 },
+    { month: "May", posts: 0 },
+    { month: "Jun", posts: 0 },
+    { month: "Jul", posts: 0 },
+    { month: "Aug", posts: 0 },
+    { month: "Sep", posts: 0 },
+    { month: "Oct", posts: 0 },
+    { month: "Nov", posts: 0 },
+    { month: "Dec", posts: 0 },
+  ];
+  posts.forEach((post) => {
+    const monthIndex = new Date(post.createdAt).getMonth();
+    monthlyPosts[monthIndex].posts++;
+  });
   return (
     <>
       {analyticsLoading || analyticsLoading2 || analyticsLoading3 ? (
@@ -345,7 +373,14 @@ export default function Page() {
                         <span className="hover:bg-[#00687a21] transition-all duration-300 p-2 rounded-lg cursor-pointer">
                           <Pencil />
                         </span>
-                        <button type="button" onClick={()=>{setSelectedPostId(post.slug);setShowDeleteModal(true)}} className="hover:bg-[#00687a21] rounded-lg p-2 cursor-pointer transition-all duration-300">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSelectedPostId(post.slug);
+                            setShowDeleteModal(true);
+                          }}
+                          className="hover:bg-[#00687a21] rounded-lg p-2 cursor-pointer transition-all duration-300"
+                        >
                           <Trash2 />
                         </button>
                       </div>
@@ -374,9 +409,26 @@ export default function Page() {
               </div>
             </div>
           )}
+          <div>
+            <div className="grid w-full juscne  items-center grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
+              <PostPieChart
+                publishCount={publishCount}
+                scheduleCount={scheduleCount}
+                draftCount={draftCount}
+              />
+              <PostBarGraph data={monthlyPosts} />
+            </div>
+          </div>
         </div>
       )}
-      <DeleteModal  isOpen={showDeleteModal} slug={selectedPostId} onClose={()=>{setSelectedPostId(null);setShowDeleteModal(false)}} />
+      <DeleteModal
+        isOpen={showDeleteModal}
+        slug={selectedPostId}
+        onClose={() => {
+          setSelectedPostId(null);
+          setShowDeleteModal(false);
+        }}
+      />
     </>
   );
 }

@@ -12,9 +12,7 @@ interface DeleteModalProps {
 const geist = Geist({
   subsets: ["latin"],
 });
-const jetbrains = JetBrains_Mono({
-  subsets: ["latin"],
-});
+
 export default function DeleteModal({
   onClose,
   isOpen,

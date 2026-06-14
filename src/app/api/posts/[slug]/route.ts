@@ -64,7 +64,15 @@ export async function GET(
     const wordCount =
       plainText.length === 0 ? 0 : plainText.split(/\s+/).length;
     const readingTimeMinutes = Math.max(1, Math.ceil(wordCount / 200));
-
+    const publishCount =  await prisma.post.count({
+      where : {status : "PUBLISHED"}
+    })
+    const scheduleCount = await prisma.post.count({
+      where : {status : "SCHEDULED"}
+    })
+    const draftCount = await prisma.post.count({
+      where : {status : "DRAFT"}
+    })
     const fullPost = {
       ...Post,
       hasLiked: session
@@ -81,6 +89,9 @@ export async function GET(
     };
     return NextResponse.json({
       post: fullPost,
+      publishCount,
+      scheduleCount,
+      draftCount
     });
   } catch (error) {
     return NextResponse.json(
