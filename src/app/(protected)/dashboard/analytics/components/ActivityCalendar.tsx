@@ -14,7 +14,7 @@ export default function PostsActivityCalendar({
     <div className="h-[250px]">
       <ResponsiveCalendar
         emptyColor="#F2F4F6"
-        colors={["#C7E9EE", "#7AC7D3", "#2A9AAD", "#00687A"]}
+        colors={["#D6E2E6", "#84ABB4", "#2C7685", "#00687A"]}
         data={data}
         from={`${today.getFullYear()}-01-01`}
         to={`${today.toISOString().split("T")[0]}`}
@@ -29,7 +29,7 @@ export default function PostsActivityCalendar({
                 direction : "row",
                 translateY : 36,
                 itemCount :5,
-                itemWidth : 34,
+                itemWidth : 24,
                 itemHeight : 34,
                 itemsSpacing : 4,
                 symbolSize : 14
@@ -40,9 +40,9 @@ export default function PostsActivityCalendar({
     <div className="mt-0 flex items-center -translate-y-24 md:-translate-y-10 justify-end  p-2 rounded-lg gap-2 text-sm text-gray-600 ">
         <span>Less</span>
         <div className="h-3 w-3 rounded-xs border bg-[#eef2f6]" />
-        <div className="h-3 w-3 rounded-xs bg-[#C7E9EE]" />
-        <div className="h-3 w-3 rounded-xs bg-[#7AC7D3]" />
-        <div className="h-3 w-3 rounded-xs bg-[#2A9AAD]" />
+        <div className="h-3 w-3 rounded-xs bg-[#84ABB4]" />
+        <div className="h-3 w-3 rounded-xs bg-[#5B909D]" />
+        <div className="h-3 w-3 rounded-xs bg-[#2C7685]" />
         <div className="h-3 w-3 rounded-xs bg-[#00687A]" />
         <span>More</span>
     </div>

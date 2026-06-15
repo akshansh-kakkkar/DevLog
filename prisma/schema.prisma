@@ -97,6 +97,7 @@ model Comment {
   postId    Int
   author    User     @relation(fields: [authorId], references: [id])
   post      Post     @relation(fields: [postId], references: [id])
+  @@index([postId,createdAt])
 }
 
 model BookMark {
