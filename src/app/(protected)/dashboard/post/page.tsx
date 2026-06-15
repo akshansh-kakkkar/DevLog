@@ -1,7 +1,6 @@
 "use client";
 import { Post } from "@/app/Types";
 import {
-  ChartColumn,
   ChevronLeft,
   ChevronRight,
   Edit,
@@ -50,10 +49,12 @@ export default function Page() {
     const getPosts = async () => {
       try {
         setPostsLoading(true);
-        const res = await fetch(`/api/dashboard/posts?page=${page}&limit=10`);
+        const res = await fetch(`/api/dashboard/posts?page=${page}&limit=1`);
         const data = await res.json();
         setPosts(data.posts);
-        setPagination(data.pagination || { currentPage: 1, totalPages: 1, totalPosts: 0 });
+        setPagination(
+          data.pagination || { currentPage: 1, totalPages: 1, totalPosts: 0 },
+        );
       } catch (error) {
         toast.error("Failed to fetch stats.");
       } finally {
@@ -74,7 +75,7 @@ export default function Page() {
           Manage your technical articles from here.
         </div>
       </div>
-      <div className="bg-white  border border-[#C6C6CD] rounded-md md:pb-0 py-4 md:pt-6">
+      <div className="bg-white  border border-[#C6C6CD] rounded-md md:pb-0 lg:py-4 pt-4 md:pt-6">
         <div className="flex px-6 pb-6 justify-between items-center">
           <div
             className={`sm:text-3xl text-xl text-[#191C1E] ${geist.className} font-semibold`}
@@ -165,25 +166,110 @@ export default function Page() {
               </div>
             </div>
           ))}
-          <div className="bg-[#F2F4F6] items-center flex justify-between border-b-1 border-[#C6C6CD] rounded-b-lg py-6 px-4">
+
+          <div className="bg-[#F2F4F6] items-center flex justify-between border-b-1 border-[#C6C6CD] rounded-b-lg lg:py-6 lg:px-4">
             <div className={`${jetbrains.className} uppercase text-sm`}>
-              Showing {pagination.totalPosts > 0 ? (page - 1) * 10 + 1 : 0} to {Math.min(page * 10, pagination.totalPosts)} of {pagination.totalPosts} Posts{" "}
+              Showing {pagination.totalPosts > 0 ? (page - 1) * 10 + 1 : 0} to{" "}
+              {Math.min(page * 10, pagination.totalPosts)} of{" "}
+              {pagination.totalPosts} Posts{" "}
             </div>
             <div className="gap-2 flex">
-              <button disabled={page === 1} onClick={()=>setPage(page - 1)} className="border-[#C6C6CD] hover:text-[#F2F4F6] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#191C1E] hover:border-[#191C1E] border-2 cursor-pointer transition-all duration-300 rounded-[3px] text-[#191C1E] ">
+              <button
+                disabled={page === 1}
+                onClick={() => setPage(page - 1)}
+                className="border-[#C6C6CD] hover:text-[#F2F4F6] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#191C1E] hover:border-[#191C1E] border-2 cursor-pointer transition-all duration-300 rounded-[3px] text-[#191C1E] "
+              >
                 <ChevronLeft className="p-1" size={30} />
               </button>
               {Array.from(
                 { length: pagination.totalPages },
                 (_, index) => index + 1,
               ).map((pageNumber) => (
-                <button className={`w-8 h-8  border-2 rounded-[3px] transition-all duration-300 ${page === pageNumber ? "bg-[#191C1E] text-[#F2F4F6]  border-[#191C1E]" : "border-[#C6C6CD] text-[#191C1E] hover:bg-[#191C1E]  hover:text-[#F2F4F6] hover:border-[#191C1E]"}`} key={pageNumber} onClick={() => setPage(pageNumber)}>
+                <button
+                  className={`w-8 h-8  border-2 rounded-[3px] transition-all duration-300 ${page === pageNumber ? "bg-[#191C1E] text-[#F2F4F6]  border-[#191C1E]" : "border-[#C6C6CD] text-[#191C1E] hover:bg-[#191C1E]  hover:text-[#F2F4F6] hover:border-[#191C1E]"}`}
+                  key={pageNumber}
+                  onClick={() => setPage(pageNumber)}
+                >
                   {pageNumber}
                 </button>
               ))}
-              <button disabled={page === pagination.totalPages || pagination.totalPages === 0} onClick={()=>setPage(page + 1)} className="border-[#C6C6CD] disabled:opacity-50 disabled:cursor-not-allowed hover:text-[#F2F4F6] hover:bg-[#191C1E] hover:border-[#191C1E] border-2 cursor-pointer transition-all duration-300 rounded-[3px] text-[#191C1E] ">
+              <button
+                disabled={
+                  page === pagination.totalPages || pagination.totalPages === 0
+                }
+                onClick={() => setPage(page + 1)}
+                className="border-[#C6C6CD] disabled:opacity-50 disabled:cursor-not-allowed hover:text-[#F2F4F6] hover:bg-[#191C1E] hover:border-[#191C1E] border-2 cursor-pointer transition-all duration-300 rounded-[3px] text-[#191C1E] "
+              >
                 <ChevronRight className="p-1" size={30} />
               </button>
+            </div>
+          </div>
+        </div>
+        <div className="lg:hidden flex flex-col gap-4">
+          {posts.map((post) => (
+            <div
+              key={post.id}
+              className="border mx-4 flex flex-col gap-4  border-[#C6C6Cd] rounded-lg p-4"
+            >
+              <div className="flex items-center justify-between ">
+                <div
+                  className={`font-semibold ${jetbrains.className} text-[#191C1E] text-lg capitalize truncate w-[12vw]`}
+                >
+                  {post.title}
+                </div>
+                <div
+                  className={`px-2  font-medium py-1 my-2 w-[80px]  items-center text-center flex justify-center rounded-sm text-xs border-2  ${post.status === "DRAFT" ? "bg-[#FEF3C7] border-[#FDE68A] text-[#B45309]" : post.status === "PUBLISHED" ? "bg-[#DCFCE7]  border-[#BBF7D0] text-[#15803D] " : post.status === "SCHEDULED" ? "bg-[#dbeafe] border-[#93C5FD]  text-[#1D4ED8]" : "bg-gray-100 border-gray-300 text-gray-700"}`}
+                >
+                  {post.status}
+                </div>
+                <div className="flex justify-center items-center text-center">
+                  {post.visibility === "PUBLIC" && (
+                    <div className="flex items-center gap-4">
+                      <Globe size={18} />
+                      <p>Public</p>
+                    </div>
+                  )}
+                  {post.visibility === "PRIVATE" && (
+                    <div className="flex items-center gap-4">
+                      <Globe size={18} />
+                      <p>Private</p>
+                    </div>
+                  )}
+                  {post.visibility === "UNLISTED" && (
+                    <div className="flex items-center gap-4">
+                      <Globe size={18} />
+                      <p>Unlisted</p>
+                    </div>
+                  )}{" "}
+                </div>
+              </div>
+              <div className="flex  justify-between">
+                <div
+                  className={`flex  gap-4 items-center justify-start text-sm ${geist.className}`}
+                >
+                  <div>
+                    {new Date(post.createdAt).toLocaleDateString()}
+                  </div>
+                </div>
+                <div className="flex gap-4">
+                  <button>
+                    <Edit size={18} />
+                  </button>
+                  <button>
+                    <Trash2Icon size={18} />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+          <div className="bg-[#F2F4F6] border-2 p-6 rounded-b-sm">
+            <div className="flex w-full justify-end items-center text-center gap-4">
+              <button                 disabled={page === 1}
+ onClick={()=>setPage(page -1)} className="border-[#C6C6CD] disabled:opacity-50 disabled:cursor-not-allowed hover:text-[#F2F4F6] hover:bg-[#191C1E] hover:border-[#191C1E] border-2 cursor-pointer transition-all duration-300 rounded-[3px] text-[#191C1E]"><ChevronLeft size={24} /></button>
+              <span>Page {page} of {pagination.totalPages}</span>
+              <button  disabled={
+                  page === pagination.totalPages || pagination.totalPages === 0
+                } onClick={()=>setPage(page + 1)}  className="border-[#C6C6CD] disabled:opacity-50 disabled:cursor-not-allowed hover:text-[#F2F4F6] hover:bg-[#191C1E] hover:border-[#191C1E] border-2 cursor-pointer transition-all duration-300 rounded-[3px] text-[#191C1E]"><ChevronRight size={24}/></button>
             </div>
           </div>
         </div>
