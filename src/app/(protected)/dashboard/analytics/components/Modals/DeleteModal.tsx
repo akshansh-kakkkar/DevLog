@@ -44,7 +44,7 @@ export default function DeleteModal({
     <div className="bg-black/50 flex justify-center items-center inset-0 fixed z-50 w-full h-full ">
       <div
         onClick={(e) => e.stopPropagation()}
-        className={`flex p-4 flex-col gap-2 bg-white rounded-lg  mx-2 justify-center items-center text-center`}
+        className={`flex p-4 flex-col gap-2 bg-white rounded-lg max-w-[500px]  mx-2 justify-center items-center text-center`}
       >
         <div className="w-full h-full flex flex-col gap-4  p-4 justify-center">
           <div className="flex items-center w-full justify-center">

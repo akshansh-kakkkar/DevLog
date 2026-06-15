@@ -26,7 +26,7 @@ export default function () {
   const slug = params.slug as string;
   const [loading, setLoading] = useState(true);
   const [post, setPost] = useState<any>(null);
-  const [liked, setLiked] = useState<any>(null)
+  const [liked, setLiked] = useState<any>(null);
   useEffect(() => {
     const getSinglePost = async () => {
       try {
