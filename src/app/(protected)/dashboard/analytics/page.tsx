@@ -25,6 +25,10 @@ import DeleteModal from "./components/Modals/DeleteModal";
 import { Post } from "@/app/Types";
 import PostPieChart from "./components/PieChart";
 import PostBarGraph from "./components/BarGraph";
+import { count } from "console";
+import { number } from "zod";
+import PostsActivityCalendar from "./components/ActivityCalendar";
+import { start } from "repl";
 const geist = Geist({
   subsets: ["latin"],
 });
@@ -36,6 +40,7 @@ export default function Page() {
   const [analyticsLoading, setAnalyticsLoading] = useState(false);
   const [analyticsLoading2, setAnalyticsLoading2] = useState(false);
   const [analyticsLoading3, setAnalyticsLoading3] = useState(false);
+  const [analyticsLoading4, setAnalyticsLoading4] = useState(false);
   const [stats, setstats] = useState({
     totalPosts: 0,
     totalReads: 0,
@@ -94,6 +99,7 @@ export default function Page() {
   ];
   const [currentCard, setCurrentCard] = useState(0);
   const [posts, setposts] = useState<Post[]>([]);
+  const [allposts, setAllposts] = useState<Post[]>([]);
   const [page, setPage] = useState(1);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [pagenation, setPagenation] = useState({
@@ -118,18 +124,32 @@ export default function Page() {
 
     getPosts();
   }, [page]);
-
+  useEffect(() => {
+    const getAllPosts = async () => {
+      try {
+        setAnalyticsLoading4(true);
+        const res = await fetch(`/api/dashboard/posts/`);
+        const data = await res.json();
+        setAllposts(data.allPosts);
+      } catch (error) {
+        toast.error("Failed to fetch all posts.");
+      } finally {
+        setAnalyticsLoading4(false);
+      }
+    };
+    getAllPosts();
+  }, []);
   const formatNumber = (num: number) => {
     return new Intl.NumberFormat("en", {
       notation: "compact",
       maximumFractionDigits: 1,
     }).format(num);
   };
-  const publishCount = posts.filter(
+  const publishCount = allposts.filter(
     (post) => post.status === "PUBLISHED",
   ).length;
-  const draftCount = posts.filter((post) => post.status === "DRAFT").length;
-  const scheduleCount = posts.filter(
+  const draftCount = allposts.filter((post) => post.status === "DRAFT").length;
+  const scheduleCount = allposts.filter(
     (post) => post.status === "SCHEDULED",
   ).length;
 
@@ -147,13 +167,43 @@ export default function Page() {
     { month: "Nov", posts: 0 },
     { month: "Dec", posts: 0 },
   ];
-  posts.forEach((post) => {
+  allposts.forEach((post) => {
     const monthIndex = new Date(post.createdAt).getMonth();
     monthlyPosts[monthIndex].posts++;
   });
+  const activityMap = new Map<string, number>();
+  allposts.forEach((post) => {
+    const date = new Date(post.createdAt).toISOString().split("T")[0];
+    activityMap.set(date, (activityMap.get(date) ?? 0) + 1);
+  });
+  const generateActiveDate  = () =>{
+    const today = new Date();
+    const startDate = new Date(today.getFullYear(), 0,1);
+    const data = [];
+    const current = new Date(startDate);
+    while (current <= today){
+      const dateStr = current.toISOString().split("T")[0];
+      const count = activityMap.get(dateStr) ?? 0
+      data.push({
+        date : dateStr,
+        count,
+        level : 
+        count === 0 ? 0 : count  <= 2 ? 1 : count <= 5 ? 2 : count <= 10 ? 3 : 4
+      })
+      current.setDate(current.getDate() + 1);
+    }
+    return data;
+    }
+    const activityData = generateActiveDate().map((item)=>({
+      day : item.date,
+      value : item.count
+    }))
   return (
     <>
-      {analyticsLoading || analyticsLoading2 || analyticsLoading3 ? (
+      {analyticsLoading ||
+        analyticsLoading2 ||
+        analyticsLoading3 ||
+        analyticsLoading4 ? (
         <div className="flex flex-col justify-center h-full items-center text-center">
           <Loader2 className="animate-spin text-[#00687A]" size={48} />
         </div>
@@ -409,7 +459,13 @@ export default function Page() {
               </div>
             </div>
           )}
+                    <div
+            className={`text-2xl font-semibold border-b-4  rounded-xs border-[#00687A] flex w-fit px-1 ${geist.className}`}
+          >
+            My Posts
+          </div>
           <div>
+            
             <div className="grid w-full juscne  items-center grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
               <PostPieChart
                 publishCount={publishCount}
@@ -417,6 +473,9 @@ export default function Page() {
                 draftCount={draftCount}
               />
               <PostBarGraph data={monthlyPosts} />
+            </div>
+            <div className="mt-5">
+              <PostsActivityCalendar data={activityData} />
             </div>
           </div>
         </div>

@@ -1,6 +1,5 @@
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/session";
-import { Pagination } from "@mantine/core";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
@@ -23,11 +22,18 @@ export async function GET(request: Request) {
             createdAt: "desc"
         }
     })
+    const allPosts = await prisma.post.findMany({
+        where : whereClause,
+        orderBy : {
+            createdAt : 'desc'
+        }
+    })
     const totalPosts = await prisma.post.count({
         where: whereClause
     })
     return NextResponse.json({
         posts,
+        allPosts,
         pagination: {
             currentPage: page,
             totalPosts,
