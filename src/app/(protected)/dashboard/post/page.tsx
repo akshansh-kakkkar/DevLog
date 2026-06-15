@@ -50,7 +50,7 @@ export default function Page() {
     const getPosts = async () => {
       try {
         setPostsLoading(true);
-        const res = await fetch(`/api/dashboard/posts?page=${page}&limit=1`);
+        const res = await fetch(`/api/dashboard/posts?page=${page}&limit=10`);
         const data = await res.json();
         setPosts(data.posts);
         setPagination(data.pagination || { currentPage: 1, totalPages: 1, totalPosts: 0 });
