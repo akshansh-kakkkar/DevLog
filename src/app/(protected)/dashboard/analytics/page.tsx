@@ -176,34 +176,42 @@ export default function Page() {
     const date = new Date(post.createdAt).toISOString().split("T")[0];
     activityMap.set(date, (activityMap.get(date) ?? 0) + 1);
   });
-  const generateActiveDate  = () =>{
+  const generateActiveDate = () => {
     const today = new Date();
-    const startDate = new Date(today.getFullYear(), 0,1);
+    const startDate = new Date(today.getFullYear(), 0, 1);
     const data = [];
     const current = new Date(startDate);
-    while (current <= today){
+    while (current <= today) {
       const dateStr = current.toISOString().split("T")[0];
-      const count = activityMap.get(dateStr) ?? 0
+      const count = activityMap.get(dateStr) ?? 0;
       data.push({
-        date : dateStr,
+        date: dateStr,
         count,
-        level : 
-        count === 0 ? 0 : count  <= 2 ? 1 : count <= 5 ? 2 : count <= 10 ? 3 : 4
-      })
+        level:
+          count === 0
+            ? 0
+            : count <= 2
+              ? 1
+              : count <= 5
+                ? 2
+                : count <= 10
+                  ? 3
+                  : 4,
+      });
       current.setDate(current.getDate() + 1);
     }
     return data;
-    }
-    const activityData = generateActiveDate().map((item)=>({
-      day : item.date,
-      value : item.count
-    }))
+  };
+  const activityData = generateActiveDate().map((item) => ({
+    day: item.date,
+    value: item.count,
+  }));
   return (
     <>
       {analyticsLoading ||
-        analyticsLoading2 ||
-        analyticsLoading3 ||
-        analyticsLoading4 ? (
+      analyticsLoading2 ||
+      analyticsLoading3 ||
+      analyticsLoading4 ? (
         <div className="flex flex-col justify-center h-full items-center text-center">
           <Loader2 className="animate-spin text-[#00687A]" size={48} />
         </div>
@@ -459,25 +467,42 @@ export default function Page() {
               </div>
             </div>
           )}
-                    <div
+          <div
             className={`text-2xl font-semibold border-b-4  rounded-xs border-[#00687A] flex w-fit px-1 ${geist.className}`}
           >
-            My Posts
+            Graphs
           </div>
-          <div>
-            
-            <div className="grid w-full juscne  items-center grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
-              <PostPieChart
-                publishCount={publishCount}
-                scheduleCount={scheduleCount}
-                draftCount={draftCount}
-              />
-              <PostBarGraph data={monthlyPosts} />
+          {posts.length === 0 ? (
+            <div
+              className={`flex-col p-8 text-center mb-24 sm:mb-0 gap-2 flex justify-center items-center w-full  bg-white border rounded-lg `}
+            >
+              <div>
+                <CircleAlert
+                  size={64}
+                  className={`rounded-full p-2 text-[#00687A] bg-[#00687a21]`}
+                />
+              </div>
+              <p
+                className={`${jetbrains.className} text-xl text-center  font-semibold`}
+              >
+                You will see your Graphs here
+              </p>
             </div>
-            <div className="mt-5">
-              <PostsActivityCalendar data={activityData} />
+          ) : (
+            <div>
+              <div className="grid w-full juscne  items-center grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
+                <PostPieChart
+                  publishCount={publishCount}
+                  scheduleCount={scheduleCount}
+                  draftCount={draftCount}
+                />
+                <PostBarGraph data={monthlyPosts} />
+              </div>
+              <div className="mt-5">
+                <PostsActivityCalendar data={activityData} />
+              </div>
             </div>
-          </div>
+          )}
         </div>
       )}
       <DeleteModal
