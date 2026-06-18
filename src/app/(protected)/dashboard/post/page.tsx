@@ -79,7 +79,7 @@ export default function Page() {
             <div
               className={`w-full h-[90vh] flex  justify-center items-center  `}
             >
-              <div className="w-fit p-12  flex-col text-center mb-24 sm:mb-0 gap-2 flex justify-center items-center   bg-white border rounded-lg ">
+              <div className="w-fit p-12 mx-12  flex-col text-center mb-24 sm:mb-0 gap-2 flex justify-center items-center   bg-white border rounded-lg ">
               <div>
                 <CircleAlert
                   size={64}
@@ -87,9 +87,9 @@ export default function Page() {
                 />
               </div>
               <p
-                className={`${jetbrains.className} text-xl text-center  font-semibold`}
+                className={`${jetbrains.className} text-2xl text-center  font-semibold`}
               >
-                You will see your Graphs here
+                You will see your Posts here
               </p>
               </div>
             </div>

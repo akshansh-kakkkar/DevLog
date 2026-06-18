@@ -1,9 +1,11 @@
 "use client";
+import { DropdownMenu, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import {
   ChartColumn,
   ChevronLeft,
   ChevronRight,
   CircleAlert,
+  CircleEllipsis,
   Clock,
   Eye,
   Globe,
@@ -25,10 +27,8 @@ import DeleteModal from "./components/Modals/DeleteModal";
 import { Post } from "@/app/Types";
 import PostPieChart from "./components/PieChart";
 import PostBarGraph from "./components/BarGraph";
-import { count } from "console";
-import { number } from "zod";
 import PostsActivityCalendar from "./components/ActivityCalendar";
-import { start } from "repl";
+import { DropdownMenuContent } from "@radix-ui/react-dropdown-menu";
 const geist = Geist({
   subsets: ["latin"],
 });
@@ -202,10 +202,12 @@ export default function Page() {
     }
     return data;
   };
-  const activityData = generateActiveDate().map((item) => ({
-    day: item.date,
-    value: item.count,
-  }));
+  const activityData = generateActiveDate()
+    .filter((item) => item.count > 0)
+    .map((item) => ({
+      day: item.date,
+      value: item.count,
+    }));
   return (
     <>
       {analyticsLoading ||
@@ -422,25 +424,45 @@ export default function Page() {
                         {new Date(post.createdAt).toLocaleDateString()}
                       </div>
                       <div className="col-span-1 gap-8 text-[#45464D] p-4 text-center flex justify-center items-center">
-                        <span className="hover:bg-[#00687a21] transition-all duration-300 p-2 rounded-lg cursor-pointer">
-                          <Link href={"/id"}>
-                            <ChartColumn />
-                          </Link>
-                        </span>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <button className="hover:bg-[#00687a21] mb12   transition-all duration-300 p-2 rounded-lg cursor-pointer">
+                              <Link href={"/id"}>
+                                <CircleEllipsis />
+                              </Link>
+                            </button>
+                          </DropdownMenuTrigger>
 
-                        <span className="hover:bg-[#00687a21] transition-all duration-300 p-2 rounded-lg cursor-pointer">
-                          <Pencil />
-                        </span>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setSelectedPostId(post.slug);
-                            setShowDeleteModal(true);
-                          }}
-                          className="hover:bg-[#00687a21] rounded-lg p-2 cursor-pointer transition-all duration-300"
-                        >
-                          <Trash2 />
-                        </button>
+                            <DropdownMenuContent align="end"
+                              className={`min-w-[180px]  rounded-lg  bg-white p-1 shadow-lg`}
+                              sideOffset={5}
+                            >
+                              <DropdownMenuItem className="flex items-center gap-2  px-3 py-2 hover:bg-[#00687A21]">
+                                <div className=" justify-center flex text-center gap-5 items-center transition-all duration-300 rounded-lg cursor-pointer">
+                                  <ChartColumn />
+                                  <span>Analytics</span>
+                                </div>
+                              </DropdownMenuItem>
+                              <DropdownMenuItem className="flex items-center gap-2  px-3 py-2 hover:bg-[#00687A21]">
+                                <div className=" justify-center flex text-center gap-5 items-center transition-all duration-300 rounded-lg cursor-pointer">
+                                  <Pencil />
+                                  <span>Edit</span>
+                                </div>
+                              </DropdownMenuItem>
+                              <DropdownMenuItem className="flex hover:bg-[#00687a21] items-center gap-2 rounded px-3 py-2">
+                                <div
+                                  onClick={() => {
+                                    setSelectedPostId(post.slug);
+                                    setShowDeleteModal(true);
+                                  }}
+                                  className=" flex gap-5 items-center justify-center rounded-lg  cursor-pointer transition-all duration-300"
+                                >
+                                  <Trash2 />
+                                  <span>Delete</span>
+                                </div>
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                       </div>
                     </div>
                   ))}
@@ -490,7 +512,7 @@ export default function Page() {
             </div>
           ) : (
             <div>
-              <div className="grid w-full juscne  items-center grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
+              <div className="grid w-full justify-center  items-center grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
                 <PostPieChart
                   publishCount={publishCount}
                   scheduleCount={scheduleCount}

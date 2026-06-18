@@ -18,9 +18,9 @@ const libretinusSans = Libertinus_Sans({
   weight: ["400", "700"],
 });
 const poppins2 = Poppins({
-  subsets: ['latin'],
-  weight: ['400']
-})
+  subsets: ["latin"],
+  weight: ["400"],
+});
 export default function () {
   const params = useParams();
   const slug = params.slug as string;
@@ -70,27 +70,86 @@ export default function () {
   const handleLike = async () => {
     const newLiked = !liked;
     setLiked(newLiked);
-    setLikesCount(prev => newLiked ? prev + 1 : prev - 1)
+    setLikesCount((prev) => (newLiked ? prev + 1 : prev - 1));
     try {
-      setLikeLoading(true)
+      setLikeLoading(true);
       const res = await fetch(`/api/posts/${slug}/like`, {
-        method: "POST"
-      })
+        method: "POST",
+      });
       const data = await res.json();
       if (!res.ok) {
-        throw new Error()
+        throw new Error();
       }
     } catch (e) {
-      setLiked(!newLiked)
-      setLikesCount(prev => newLiked ? prev - 1 : prev + 1)
-      toast.error("failed to like the post. Try not to spam")
+      setLiked(!newLiked);
+      setLikesCount((prev) => (newLiked ? prev - 1 : prev + 1));
+      toast.error("failed to like the post. Try not to spam");
+    } finally {
+      setLikeLoading(false);
     }
-    finally {
-      setLikeLoading(false)
-    }
-  }
+  };
   const [currentImage, setCurrentImage] = useState(0);
   const [direction, setDirection] = useState(1);
+  const [comments, setComments] = useState<any[]>([]);
+  const [comment, setComment] = useState("");
+  const [commentLoading, setCommentLoading] = useState(false);
+  const [commentPage, setCommentPage] = useState(1);
+  const [hasMoreComments, setHasMoreComments] = useState(false);
+  const [commentsLoading, setCommentsLoading] = useState(false);
+
+ const fetchComments = async (page = 1) => {
+    try {
+      setCommentsLoading(true);
+      const res = await fetch(`/api/posts/${slug}/comments?page=${page}`);
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error();
+      }
+      if (page === 1) {
+        setComments(data.comments);
+      } else {
+        setComments((prev) => [...prev, ...data.comments]);
+      }
+    } catch (error) {
+      toast.error("Something went wrong while fetching comments");
+    } finally {
+      setCommentsLoading(false);
+    }
+  };
+  useEffect(() => {
+    if (slug) {
+      fetchComments(1);
+    }
+  }, [slug]);
+  const submitComment = async ()=>{
+    if(!comment.trim()) return;
+    try{
+      setCommentLoading(true);
+      const res = await fetch(`/api/posts/${slug}/comments`, {
+        method : "POST",
+        headers : {
+          "Content-Type"  : "application/json",
+        },
+        body : JSON.stringify({
+          content : comment
+        })
+      })
+      const data = await res.json();
+      if(!res.ok){
+        throw new Error();
+      }
+      setComments((prev)=>[
+        data,...prev
+      ])
+      setComment('')
+    }
+    catch(error){
+      toast.error("Something went wrong while submitting a comment")
+    }
+    finally{
+      setCommentLoading(false);
+    }
+  }
   return (
     <>
       {loading || !post ? (
@@ -117,9 +176,14 @@ export default function () {
                 })}
               </div>
             </div>
-            <div className={`${poppins.className} flex items-center gap-4 border  px-4 py-1 text-center bg-white rounded-2xl justify-between `}>
+            <div
+              className={`${poppins.className} flex items-center gap-4 border  px-4 py-1 text-center bg-white rounded-2xl justify-between `}
+            >
               <button onClick={handleLike} disabled={likeLoading}>
-                <Heart className={`cursor pointer  ${liked ? "fill-red-500 text-500 stroke-red-500" : "text-gray-400"}`} size={32} />
+                <Heart
+                  className={`cursor pointer  ${liked ? "fill-red-500 text-500 stroke-red-500" : "text-gray-400"}`}
+                  size={32}
+                />
               </button>
               <span className="text-xl font-semibold">{likesCount}</span>
             </div>
@@ -201,17 +265,18 @@ export default function () {
           <div className="gap-2 my-4 overflow-x-auto flex">
             {post.postTags?.map((postTag: any) => (
               <span
-              key={postTag.tag.name}
+                key={postTag.tag.name}
                 className={`text-sm gap-2 flex md:text-lg bg-[#00687A] text-white px-3 py-1 rounded-md ${poppins2.className}`}
               >
                 <span>#</span> {postTag.tag.name}
               </span>
             ))}
           </div>
+          <div>
+            
+          </div>
         </div>
-
       )}
-
     </>
   );
 }
