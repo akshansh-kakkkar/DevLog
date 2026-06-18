@@ -1,5 +1,5 @@
 "use client";
-import { DropdownMenu, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuItem, DropdownMenuTrigger,DropdownMenuContent } from "@/components/ui/dropdown-menu";
 import {
   ChartColumn,
   ChevronLeft,
@@ -28,7 +28,7 @@ import { Post } from "@/app/Types";
 import PostPieChart from "./components/PieChart";
 import PostBarGraph from "./components/BarGraph";
 import PostsActivityCalendar from "./components/ActivityCalendar";
-import { DropdownMenuContent } from "@radix-ui/react-dropdown-menu";
+
 const geist = Geist({
   subsets: ["latin"],
 });
@@ -426,13 +426,10 @@ export default function Page() {
                       <div className="col-span-1 gap-8 text-[#45464D] p-4 text-center flex justify-center items-center">
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <button className="hover:bg-[#00687a21] mb12   transition-all duration-300 p-2 rounded-lg cursor-pointer">
-                              <Link href={"/id"}>
+                            <button className="hover:bg-[#00687a21]   transition-all duration-300 p-2 rounded-lg cursor-pointer">
                                 <CircleEllipsis />
-                              </Link>
                             </button>
                           </DropdownMenuTrigger>
-
                             <DropdownMenuContent align="end"
                               className={`min-w-[180px]  rounded-lg  bg-white p-1 shadow-lg`}
                               sideOffset={5}

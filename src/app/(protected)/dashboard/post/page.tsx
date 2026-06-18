@@ -1,10 +1,11 @@
 "use client";
 import { Post } from "@/app/Types";
 import {
-  AlertCircle,
+  ChartColumn,
   ChevronLeft,
   ChevronRight,
   CircleAlert,
+  CircleEllipsis,
   Edit,
   Funnel,
   Globe,
@@ -21,6 +22,12 @@ import {
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import DeleteModal from "../analytics/components/Modals/DeleteModal";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@radix-ui/react-dropdown-menu";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -76,23 +83,21 @@ export default function Page() {
   ) : (
     <>
       {posts.length === 0 ? (
-            <div
-              className={`w-full h-[90vh] flex  justify-center items-center  `}
-            >
-              <div className="w-fit p-12 mx-12  flex-col text-center mb-24 sm:mb-0 gap-2 flex justify-center items-center   bg-white border rounded-lg ">
-              <div>
-                <CircleAlert
-                  size={64}
-                  className={`rounded-full p-2 text-[#00687A] bg-[#00687a21]`}
-                />
-              </div>
-              <p
-                className={`${jetbrains.className} text-2xl text-center  font-semibold`}
-              >
-                You will see your Posts here
-              </p>
-              </div>
+        <div className={`w-full h-[90vh] flex  justify-center items-center  `}>
+          <div className="w-fit p-12 mx-12  flex-col text-center mb-24 sm:mb-0 gap-2 flex justify-center items-center   bg-white border rounded-lg ">
+            <div>
+              <CircleAlert
+                size={64}
+                className={`rounded-full p-2 text-[#00687A] bg-[#00687a21]`}
+              />
             </div>
+            <p
+              className={`${jetbrains.className} text-2xl text-center  font-semibold`}
+            >
+              You will see your Posts here
+            </p>
+          </div>
+        </div>
       ) : (
         <div className="mt-12 mx-5 md:mx-12 lg:mx-22 flex gap-7 flex-col">
           <div className="flex  sm:justify-start justify-center flex-col gap-4 border-[#C6C6CD] border-b-2 pb-2 ">
@@ -137,7 +142,7 @@ export default function Page() {
                       {post.title}
                     </div>
                   </div>
-                  <div className="flex gap-32">
+                  <div className="flex items-center justify-center   gap-32">
                     <div
                       className={`px-2 font-medium py-1 w-[80px]  items-center text-center flex justify-center rounded-sm text-xs border-2  ${post.status === "DRAFT" ? "bg-[#FEF3C7] border-[#FDE68A] text-[#B45309]" : post.status === "PUBLISHED" ? "bg-[#DCFCE7]  border-[#BBF7D0] text-[#15803D] " : post.status === "SCHEDULED" ? "bg-[#dbeafe] border-[#93C5FD]  text-[#1D4ED8]" : "bg-gray-100 border-gray-300 text-gray-700"}`}
                     >
@@ -168,24 +173,45 @@ export default function Page() {
                     >
                       {new Date(post.createdAt).toLocaleDateString()}
                     </div>
-
-                    <div className="gap-6 flex">
-                      <button>
-                        <Edit
-                          className="hover:bg-[#00687a21] rounded-lg p-2 cursor-pointer transition-all duration-300"
-                          size={34}
-                        />
-                      </button>
-                      <button
-                        className="hover:bg-[#00687a21] rounded-lg p-2 cursor-pointer transition-all duration-300"
-                        onClick={() => {
-                          setSelectedPostId(post.slug);
-                          setIsDeleteOpen(true);
-                        }}
-                      >
-                        <Trash2Icon size={20} />
-                      </button>
-                    </div>
+                    <DropdownMenu>
+                      <div className="gap-8 p-2 text-center flex justify-center items-center">
+                        <DropdownMenuTrigger asChild>
+                          <button className="hover:bg-[#00687a21]   transition-all duration-300 rounded-lg cursor-pointer">
+                            <CircleEllipsis size={40} className="hover:bg-[#00687a21]   transition-all duration-300 p-2 rounded-lg cursor-pointer" />
+                          </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent
+                          align="end"
+                          className={`min-w-[180px]  rounded-lg z-50 mt-4 border bg-white p-1 shadow-lg`}
+                          sideOffset={5}
+                        >
+                          <DropdownMenuItem className="flex items-center gap-2  px-3 py-2 hover:bg-[#00687A21]">
+                            <button className=" justify-center flex text-center gap-5 items-center transition-all duration-300 rounded-lg cursor-pointer">
+                              <ChartColumn />
+                              <span>Analytics</span>
+                            </button>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem className="flex items-center gap-2  px-3 py-2 hover:bg-[#00687A21]">
+                            <button className=" justify-center flex text-center gap-5 items-center transition-all duration-300 rounded-lg cursor-pointer">
+                              <Edit />
+                              <span>Edit</span>
+                            </button>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem className="flex items-center gap-2  px-3 py-2 hover:bg-[#00687A21]">
+                            <button
+                              className=" justify-center flex text-center gap-5 items-center transition-all duration-300 rounded-lg cursor-pointer"
+                              onClick={() => {
+                                setSelectedPostId(post.slug);
+                                setIsDeleteOpen(true);
+                              }}
+                            >
+                              <Trash2Icon size={20} />
+                              <span>Delete</span>
+                            </button>
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </div>
+                    </DropdownMenu>
                   </div>
                 </div>
               ))}
@@ -274,6 +300,12 @@ export default function Page() {
                       <div>{new Date(post.createdAt).toLocaleDateString()}</div>
                     </div>
                     <div className="flex gap-4">
+                                            <button>
+                        <ChartColumn
+                          className="hover:bg-[#00687a21] rounded-lg p-2 cursor-pointer transition-all duration-300"
+                          size={32}
+                        />
+                      </button>
                       <button>
                         <Edit
                           className="hover:bg-[#00687a21] rounded-lg p-2 cursor-pointer transition-all duration-300"
