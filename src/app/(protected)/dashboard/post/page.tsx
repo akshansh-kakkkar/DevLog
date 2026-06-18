@@ -22,12 +22,8 @@ import {
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import DeleteModal from "../analytics/components/Modals/DeleteModal";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@radix-ui/react-dropdown-menu";
+import { DropdownMenu, DropdownMenuItem, DropdownMenuTrigger,DropdownMenuContent } from "@/components/ui/dropdown-menu";
+
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -175,14 +171,14 @@ export default function Page() {
                     </div>
                     <DropdownMenu>
                       <div className="gap-8 p-2 text-center flex justify-center items-center">
-                        <DropdownMenuTrigger asChild>
+                        <DropdownMenuTrigger >
                           <button className="hover:bg-[#00687a21]   transition-all duration-300 rounded-lg cursor-pointer">
                             <CircleEllipsis size={40} className="hover:bg-[#00687a21]   transition-all duration-300 p-2 rounded-lg cursor-pointer" />
                           </button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent
                           align="end"
-                          className={`min-w-[180px]  rounded-lg z-50 mt-4 border bg-white p-1 shadow-lg`}
+                          className={`min-w-[180px]  rounded-lg z-50 border bg-white p-1 shadow-lg`}
                           sideOffset={5}
                         >
                           <DropdownMenuItem className="flex items-center gap-2  px-3 py-2 hover:bg-[#00687A21]">

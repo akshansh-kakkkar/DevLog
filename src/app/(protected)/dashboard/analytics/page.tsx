@@ -425,7 +425,7 @@ export default function Page() {
                       </div>
                       <div className="col-span-1 gap-8 text-[#45464D] p-4 text-center flex justify-center items-center">
                         <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
+                          <DropdownMenuTrigger>
                             <button className="hover:bg-[#00687a21]   transition-all duration-300 p-2 rounded-lg cursor-pointer">
                                 <CircleEllipsis />
                             </button>
