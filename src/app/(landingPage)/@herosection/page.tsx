@@ -133,7 +133,7 @@ function HeroContent() {
         <motion.div whileHover={{ scale: 0.95 }} whileTap={{ scale: 1.1 }}>
           <Link
             className={`bg-[#191C1E] text-2xl  md:text-3xl group flex gap-3 text-white px-8 rounded-sm p-4 ${LibertinusSerif.className}`}
-            href={"/auth"}
+            href={session ? "/auth" : "/dashboard"}
           >
             <div className="flex justify-center items-center  gap-7">
               <span>Get Started</span>
