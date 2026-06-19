@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { Suspense } from "react";
+import { useSession } from '@/lib/auth-client';
 
 const LibertinusSerif = Libertinus_Serif({
   subsets: ["latin"],
@@ -14,6 +15,8 @@ const LibertinusSerif = Libertinus_Serif({
 });
 
 function HeroContent() {
+  const {data : session} = useSession();
+  
   const searchParams = useSearchParams();
   useEffect(() => {
     const toastType = searchParams.get("toast");
@@ -108,6 +111,7 @@ function HeroContent() {
       );
     }
   }, []);
+
   return (
     <div
       className={`flex flex-col gap-8 p-5 via-white via-80% flex-1 justify-center items-center bg-[#f7fbfc] `}
@@ -146,10 +150,10 @@ function HeroContent() {
           >
             <div className="flex gap-7 justify-center items-center group">
               <span>Explore Feed</span>{" "}
-              <span className="transition-all duration-300  group-hover:-translate-x-2 ">
+              <span className="transition-all duration-300  group-hover:translate-x-2 ">
                 <Route />
               </span>
-            </div>{" "}
+            </div>
           </Link>
         </motion.div>
       </div>

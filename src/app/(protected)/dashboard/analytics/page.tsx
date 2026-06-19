@@ -1,5 +1,10 @@
 "use client";
-import { DropdownMenu, DropdownMenuItem, DropdownMenuTrigger,DropdownMenuContent } from "@/components/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+} from "@/components/ui/dropdown-menu";
 import {
   ChartColumn,
   ChevronLeft,
@@ -427,38 +432,39 @@ export default function Page() {
                         <DropdownMenu>
                           <DropdownMenuTrigger>
                             <button className="hover:bg-[#00687a21]   transition-all duration-300 p-2 rounded-lg cursor-pointer">
-                                <CircleEllipsis />
+                              <CircleEllipsis />
                             </button>
                           </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end"
-                              className={`min-w-[180px]  rounded-lg  bg-white p-1 shadow-lg`}
-                              sideOffset={5}
-                            >
-                              <DropdownMenuItem className="flex items-center gap-2  px-3 py-2 hover:bg-[#00687A21]">
-                                <div className=" justify-center flex text-center gap-5 items-center transition-all duration-300 rounded-lg cursor-pointer">
-                                  <ChartColumn />
-                                  <span>Analytics</span>
-                                </div>
-                              </DropdownMenuItem>
-                              <DropdownMenuItem className="flex items-center gap-2  px-3 py-2 hover:bg-[#00687A21]">
-                                <div className=" justify-center flex text-center gap-5 items-center transition-all duration-300 rounded-lg cursor-pointer">
-                                  <Pencil />
-                                  <span>Edit</span>
-                                </div>
-                              </DropdownMenuItem>
-                              <DropdownMenuItem className="flex hover:bg-[#00687a21] items-center gap-2 rounded px-3 py-2">
-                                <div
-                                  onClick={() => {
-                                    setSelectedPostId(post.slug);
-                                    setShowDeleteModal(true);
-                                  }}
-                                  className=" flex gap-5 items-center justify-center rounded-lg  cursor-pointer transition-all duration-300"
-                                >
-                                  <Trash2 />
-                                  <span>Delete</span>
-                                </div>
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
+                          <DropdownMenuContent
+                            align="end"
+                            className={`min-w-[180px]  rounded-lg  bg-white p-1 shadow-lg`}
+                            sideOffset={5}
+                          >
+                            <DropdownMenuItem className="flex items-center gap-2  px-3 py-2 hover:bg-[#00687A21]">
+                              <div className=" justify-center flex text-center gap-5 items-center transition-all duration-300 rounded-lg cursor-pointer">
+                                <ChartColumn />
+                                <span>Analytics</span>
+                              </div>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem className="flex items-center gap-2  px-3 py-2 hover:bg-[#00687A21]">
+                              <div className=" justify-center flex text-center gap-5 items-center transition-all duration-300 rounded-lg cursor-pointer">
+                                <Pencil />
+                                <span>Edit</span>
+                              </div>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem className="flex hover:bg-[#00687a21] items-center gap-2 rounded px-3 py-2">
+                              <div
+                                onClick={() => {
+                                  setSelectedPostId(post.slug);
+                                  setShowDeleteModal(true);
+                                }}
+                                className=" flex gap-5 items-center justify-center rounded-lg  cursor-pointer transition-all duration-300"
+                              >
+                                <Trash2 />
+                                <span>Delete</span>
+                              </div>
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
                         </DropdownMenu>
                       </div>
                     </div>
