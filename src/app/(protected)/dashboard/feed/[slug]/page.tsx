@@ -97,10 +97,10 @@ export default function () {
   const [hasMoreComments, setHasMoreComments] = useState(false);
   const [commentsLoading, setCommentsLoading] = useState(false);
 
- const fetchComments = async (page = 1) => {
+  const fetchComments = async (page = 1) => {
     try {
       setCommentsLoading(true);
-      const res = await fetch(`/api/posts/${slug}/comments?page=${page}`);
+      const res = await fetch(`/api/comments/post/${slug}?page=${page}`);
       const data = await res.json();
       if (!res.ok) {
         throw new Error();
@@ -121,35 +121,31 @@ export default function () {
       fetchComments(1);
     }
   }, [slug]);
-  const submitComment = async ()=>{
-    if(!comment.trim()) return;
-    try{
+  const submitComment = async () => {
+    if (!comment.trim()) return;
+    try {
       setCommentLoading(true);
-      const res = await fetch(`/api/posts/${slug}/comments`, {
-        method : "POST",
-        headers : {
-          "Content-Type"  : "application/json",
+      const res = await fetch(`/api/comments/post/${slug}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-        body : JSON.stringify({
-          content : comment
-        })
-      })
+        body: JSON.stringify({
+          content: comment,
+        }),
+      });
       const data = await res.json();
-      if(!res.ok){
+      if (!res.ok) {
         throw new Error();
       }
-      setComments((prev)=>[
-        data,...prev
-      ])
-      setComment('')
-    }
-    catch(error){
-      toast.error("Something went wrong while submitting a comment")
-    }
-    finally{
+      setComments((prev) => [data, ...prev]);
+      setComment("");
+    } catch (error) {
+      toast.error("Something went wrong while submitting a comment");
+    } finally {
       setCommentLoading(false);
     }
-  }
+  };
   return (
     <>
       {loading || !post ? (
@@ -262,18 +258,53 @@ export default function () {
             dangerouslySetInnerHTML={{ __html: post.content }}
             className={`${poppins.className} [&_ul]:list-disc [&_mark]:bg-[#00687A]/80 [&_mark]:text-white [&_mark]:px-2 [&_mark]:py-1 w-full ProseMirror [&_h1]:text-4xl [&_h1]:font-semibold [&_h1]:mt-2 [&_h1]:mb-2 [&_h2]:text-2xl [&_h2]:font-semibold [&_h2]:mt-2 [&_h2]:mb-2 [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:my-4 [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:my-4  [&_code]:px-1 [&_code]:py-0.5 [&_code]:rounded [&_code]:font-mono [&_pre]:bg-gray-900 [&_pre]:text-white [&_pre]:p-4 [&_pre]:rounded-lg [&_pre]:my-4 [&_ul]:ml-6 [&_ol]:list-decimal [&_ol]:ml-6`}
           />
+
           <div className="gap-2 my-4 overflow-x-auto flex">
+            <div className="mt-12 border-t-2 pt-8 w-full ">
+              <h2 className={`${libretinusSans.className} text-3xl font-bold`}>
+                Comments
+              </h2>
+              <div className="mt-6 flex flex-col justify-start items-start w-full gap-4">
+                <textarea
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                  className={`border w-full rounded-lg p-4 min-h-[50px] `}
+                  placeholder="Share your thoughts..."
+                />
+                <button  onClick={submitComment} disabled={commentLoading} className={`${jetbrains.className} cursor-pointer disabled:cursor-not-allowed hover:bg-[#00687aa9] transition-all duration-300 bg-[#00687A] text-white font-bold px-4 py-2 rounded-md text-lg `}>{commentLoading ? "Posting..." : "Post Comment"}</button>
+              </div>
+            </div>
+            <div className="mt-8 flex flex-col gap-6">
+              {comments.map((comment)=>(
+                <div className="border rounded-lg p-4" key={comment.id}>
+                  <div className={`font-semibold`}>
+                    {comment.author.id}
+                  </div>
+                  <div>
+                    {formatDistanceToNow(new Date(comment.createdAt), {
+                      addSuffix : true,
+                    })}
+                  </div>
+                  <p className="mt-2">{comment.content}</p>
+                </div>
+              ))}
+              {hasMoreComments && (
+                <div className="flex justify-center mt-6">
+                  <button className={`border px-4 py-2 rounded-lg `}>
+                    Load More
+                  </button>
+                </div>
+              )}
+            </div>
             {post.postTags?.map((postTag: any) => (
               <span
                 key={postTag.tag.name}
+                aria-rowcount={12}
                 className={`text-sm gap-2 flex md:text-lg bg-[#00687A] text-white px-3 py-1 rounded-md ${poppins2.className}`}
               >
                 <span>#</span> {postTag.tag.name}
               </span>
             ))}
-          </div>
-          <div>
-            
           </div>
         </div>
       )}
