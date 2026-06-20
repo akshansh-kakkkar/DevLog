@@ -22,8 +22,12 @@ import {
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import DeleteModal from "../analytics/components/Modals/DeleteModal";
-import { DropdownMenu, DropdownMenuItem, DropdownMenuTrigger,DropdownMenuContent } from "@/components/ui/dropdown-menu";
-
+import {
+  DropdownMenu,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+} from "@/components/ui/dropdown-menu";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -171,9 +175,12 @@ export default function Page() {
                     </div>
                     <DropdownMenu>
                       <div className="gap-8 p-2 text-center flex justify-center items-center">
-                        <DropdownMenuTrigger >
+                        <DropdownMenuTrigger>
                           <button className="hover:bg-[#00687a21]   transition-all duration-300 rounded-lg cursor-pointer">
-                            <CircleEllipsis size={40} className="hover:bg-[#00687a21]   transition-all duration-300 p-2 rounded-lg cursor-pointer" />
+                            <CircleEllipsis
+                              size={40}
+                              className="hover:bg-[#00687a21]   transition-all duration-300 p-2 rounded-lg cursor-pointer"
+                            />
                           </button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent
@@ -296,7 +303,7 @@ export default function Page() {
                       <div>{new Date(post.createdAt).toLocaleDateString()}</div>
                     </div>
                     <div className="flex gap-4">
-                                            <button>
+                      <button>
                         <ChartColumn
                           className="hover:bg-[#00687a21] rounded-lg p-2 cursor-pointer transition-all duration-300"
                           size={32}

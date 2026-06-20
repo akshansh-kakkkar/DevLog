@@ -1,11 +1,25 @@
 "use client";
-import { ChevronLeft, ChevronRight, Dot, Heart, Loader2 } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  CircleEllipsis,
+  Dot,
+  Heart,
+  Loader2,
+} from "lucide-react";
 import { JetBrains_Mono, Libertinus_Sans, Poppins } from "next/font/google";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
 import { AnimatePresence, motion } from "framer-motion";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
+
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["400", "700"],
@@ -110,6 +124,10 @@ export default function () {
       } else {
         setComments((prev) => [...prev, ...data.comments]);
       }
+      if (data.pagination) {
+        setHasMoreComments(data.pagination.hasMore);
+        setCommentPage(page);
+      }
     } catch (error) {
       toast.error("Something went wrong while fetching comments");
     } finally {
@@ -146,6 +164,7 @@ export default function () {
       setCommentLoading(false);
     }
   };
+  const deleteComment = () => {};
   return (
     <>
       {loading || !post ? (
@@ -264,38 +283,96 @@ export default function () {
               <h2 className={`${libretinusSans.className} text-3xl font-bold`}>
                 Comments
               </h2>
-              <div className="mt-6 flex flex-col justify-start items-start w-full gap-4">
+              <div className="mt-6  flex flex-col justify-start items-start w-full gap-4">
                 <textarea
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
                   className={`border w-full rounded-lg p-4 min-h-[50px] `}
                   placeholder="Share your thoughts..."
                 />
-                <button  onClick={submitComment} disabled={commentLoading} className={`${jetbrains.className} cursor-pointer disabled:cursor-not-allowed hover:bg-[#00687aa9] transition-all duration-300 bg-[#00687A] text-white font-bold px-4 py-2 rounded-md text-lg `}>{commentLoading ? "Posting..." : "Post Comment"}</button>
+                <button
+                  onClick={submitComment}
+                  disabled={commentLoading}
+                  className={`${jetbrains.className} cursor-pointer disabled:cursor-not-allowed hover:bg-[#00687aa9] transition-all duration-300 bg-[#00687A] text-white font-bold px-4 py-2 rounded-md text-lg `}
+                >
+                  {commentLoading ? "Posting..." : "Post Comment"}
+                </button>
+              </div>
+              <div className="mt-8 flex flex-col">
+                {comments.map((comment) => (
+                  <div className="border border-t-0 p-4" key={comment.id}>
+                    <div className="flex flex-col">
+                      <div className="flex justify-between">
+                        <div className="flex gap-2 items-center text-center">
+                          <div
+                            className={`${jetbrains.className} text-3xl bg-[#00687A] p-3 px-5 font-bold text-white rounded-full`}
+                          >
+                            {comment.author.name.charAt(0).toUpperCase()}
+                          </div>
+                          <div className="flex flex-col">
+                            <div
+                              className={`font-semibold text-2xl capitalize text-[#191C1E]`}
+                            >
+                              {comment.author.name}
+                            </div>
+                            <div className={`text-[#45464D] text-sm mr-24`}>
+                              {formatDistanceToNow(
+                                new Date(comment.createdAt),
+                                {
+                                  addSuffix: true,
+                                },
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                        <div>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger>
+                              <button>
+                                <CircleEllipsis
+                                  size={32}
+                                  className="text-[#949494]"
+                                />
+                              </button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                              <DropdownMenuItem></DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      className={`max-w-[900px] mx-4 whitespace-pre-wrap break-words text-[#191C1E] ${jetbrains.className} my-2`}
+                    >
+                      {comment.content}
+                    </div>
+                  </div>
+                ))}
+                {hasMoreComments && (
+                  <div className="flex justify-center mt-6">
+                    <button
+                      onClick={() => fetchComments(commentPage + 1)}
+                      disabled={commentsLoading}
+                    >
+                      {commentsLoading ? (
+                        <Loader2
+                          className="animate-spin text-[#00687A]"
+                          size={32}
+                        />
+                      ) : (
+                        <div
+                          className={`bg-[#00687A] text-xl cursor-pointer disabled:cursor-not-allowed disabled:hover:bg-[#00687A] transition-all duration-300 text-white hover:bg-[#00687a93] px-4 py-2 rounded-lg `}
+                        >
+                          Load More
+                        </div>
+                      )}{" "}
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
-            <div className="mt-8 flex flex-col gap-6">
-              {comments.map((comment)=>(
-                <div className="border rounded-lg p-4" key={comment.id}>
-                  <div className={`font-semibold`}>
-                    {comment.author.id}
-                  </div>
-                  <div>
-                    {formatDistanceToNow(new Date(comment.createdAt), {
-                      addSuffix : true,
-                    })}
-                  </div>
-                  <p className="mt-2">{comment.content}</p>
-                </div>
-              ))}
-              {hasMoreComments && (
-                <div className="flex justify-center mt-6">
-                  <button className={`border px-4 py-2 rounded-lg `}>
-                    Load More
-                  </button>
-                </div>
-              )}
-            </div>
+
             {post.postTags?.map((postTag: any) => (
               <span
                 key={postTag.tag.name}
