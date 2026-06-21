@@ -563,6 +563,7 @@ export default function Page() {
         onClose={() => setGallery(false)}
         images={images}
         isOpen={gallery}
+        setImages={setImages}
       />
     </div>
   );

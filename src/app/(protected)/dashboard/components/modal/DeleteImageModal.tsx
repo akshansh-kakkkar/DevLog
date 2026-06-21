@@ -6,28 +6,30 @@ import { toast } from "sonner";
 interface DeleteModalProps {
   onClose: () => void;
   isOpen: Boolean;
+  onDelete: () => void;
 }
 const geist = Geist({
-    subsets : ['latin']
-})
+  subsets: ["latin"],
+});
 export default function DeleteImageModal({
   onClose,
   isOpen,
+  onDelete
 }: DeleteModalProps) {
-    if(!isOpen) return null;
-    const [isLoading, setIsLoading] = useState(false)
-    const deleteImage = ()=>{
-        try{
-            setIsLoading(true);
-            toast.success("Image deleted successfully")
-            onClose();
-        }
-        catch(error){
-            toast.error("Failed to delete the image.");
-        }finally{
-            setIsLoading(false)
-        }
-        }
+  if (!isOpen) return null;
+  const [isLoading, setIsLoading] = useState(false);
+  const deleteImage = () => {
+    try {
+      setIsLoading(true);
+      onDelete();
+      toast.success("Image deleted successfully");
+      onClose();
+    } catch (error) {
+      toast.error("Failed to delete the image.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div
@@ -60,12 +62,26 @@ export default function DeleteImageModal({
             Are you sure you would like to delete this ? This action is
             irreversible.
           </div>
-                      <div className={`flex w-full text-lg sm:text-xl font-semibold ${geist.className} gap-4 justify-center items-center `}>
-                          <button onClick={onClose} className='border cursor-pointer hover:scale-[98%] transition-all duration-300 border-[#C6C6CD] cursor-pointer py-4 rounded-xl w-full'>Cancel</button>
-                          <button onClick={deleteImage} className=' py-4 flex justify-center items-center text-center rounded-xl cursor-pointer hover:scale-[98%] transition-all duration-300 bg-[#93000A] hover:bg-red-700 disabled:50 disabled:cursor-not-allowed text-white w-full'>
-                              {isLoading ? <Loader2 className='flex animate-spin text-white'  /> : "Confirm"}
-                          </button>
-                      </div>
+          <div
+            className={`flex w-full text-lg sm:text-xl font-semibold ${geist.className} gap-4 justify-center items-center `}
+          >
+            <button
+              onClick={onClose}
+              className="border cursor-pointer hover:scale-[98%] transition-all duration-300 border-[#C6C6CD] cursor-pointer py-4 rounded-xl w-full"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={deleteImage}
+              className=" py-4 flex justify-center items-center text-center rounded-xl cursor-pointer hover:scale-[98%] transition-all duration-300 bg-[#93000A] hover:bg-red-700 disabled:50 disabled:cursor-not-allowed text-white w-full"
+            >
+              {isLoading ? (
+                <Loader2 className="flex animate-spin text-white" />
+              ) : (
+                "Confirm"
+              )}
+            </button>
+          </div>
         </div>
       </div>
     </div>

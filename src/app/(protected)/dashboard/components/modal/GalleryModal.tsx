@@ -1,17 +1,19 @@
 import { ChevronLeft, ChevronRight, Loader2, Trash2 } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import DeleteImageModal from "./DeleteImageModal";
 
 interface GalleryModalProps {
   images: string[];
   isOpen: boolean;
   onClose: () => void;
+  setImages : Dispatch<SetStateAction<string[]>>
 }
 export default function GalleryModal({
   images,
   isOpen,
   onClose,
+  setImages
 }: GalleryModalProps) {
   const [loading, setLoading] = useState(true);
   const [currentImage, setCurrentImage] = useState(0);
@@ -44,6 +46,14 @@ export default function GalleryModal({
     }
   }, [isOpen])
     const [deleteImageOpen, setDeleteImageOpen] = useState(false);
+    const handleDelete = ()=>{
+      setImages((prev)=> prev.filter((_,i) =>i !== currentImage))
+      if(images.length === 1){
+        onClose();
+      }else if(currentImage === images.length -1){
+        setCurrentImage(prev => prev -1)
+      }
+    }
     if (!isOpen) return null;
 
   return (
@@ -74,7 +84,7 @@ export default function GalleryModal({
                               <Image
                 src={images[currentImage]}
                 alt="images"
-                className={`absolute  object-cover h-full w-full inset-0 opacity-30 rounded-xl blur-3xl transition-opacity duration-300  rounded-xl  ${loading ? "opacity-0" : "opacity-100"}`}
+                className={`absolute  object-cover h-full w-full inset-0 opacity-100 rounded-xl blur-3xl transition-opacity duration-300  rounded-xl  ${loading ? "opacity-0" : "opacity-100"}`}
                 fill
                 onLoad={() => setLoading(false)}
               />
@@ -85,8 +95,8 @@ export default function GalleryModal({
                 fill
                 onLoad={() => setLoading(false)}
               />
-              <div onClick={(e)=>{e.stopPropagation(); setDeleteImageOpen(true)}} className="relative cursor-pointer group-hover:flex justify-end  z-20 items-start p-4 w-full h-full hidden ">
-                <Trash2 size={48} className="text-[#ffffff] bg-[#00687abe]  p-2 rounded-full "  />
+              <div className="relative cursor-pointer flex justify-end  z-20 items-start p-4 w-full h-full  ">
+                <Trash2 onClick={(e)=>{e.stopPropagation(); setDeleteImageOpen(true)}}  size={48} className="text-[#ffffff] bg-[#00687abe]  p-2 rounded-full "  />
               </div>
               </div>
             </div>
@@ -108,7 +118,7 @@ export default function GalleryModal({
         </div>
       </div>
     </div>
-        <DeleteImageModal onClose={()=>setDeleteImageOpen(false)} isOpen={deleteImageOpen}/>
+        <DeleteImageModal onDelete={handleDelete} onClose={()=>setDeleteImageOpen(false)} isOpen={deleteImageOpen}/>
 </>
   );
 }
