@@ -1,6 +1,7 @@
-import { ChevronLeft, ChevronRight, Loader2, Trash2Icon } from "lucide-react";
+import { ChevronLeft, ChevronRight, Loader2, Trash2 } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import DeleteImageModal from "./DeleteImageModal";
 
 interface GalleryModalProps {
   images: string[];
@@ -42,9 +43,11 @@ export default function GalleryModal({
       window.removeEventListener("keydown", handleKeyDown)
     }
   }, [isOpen])
+    const [deleteImageOpen, setDeleteImageOpen] = useState(false);
     if (!isOpen) return null;
 
   return (
+    <>
     <div
       className="fixed inset-0  w-full h-full flex flex-col justify-center z-50 bg-black/70 p-4"
       onClick={onClose}
@@ -58,7 +61,7 @@ export default function GalleryModal({
         </div>
         <div
           onClick={(e) => e.stopPropagation()}
-          className="bg- select-none rounded-xl p-4 overflow-y-auto"
+          className="bg- select-none rounded-xl overflow-y-auto"
         >
           <div>
             <div className="md:w-[900px] w-[200px] sm:w-[450px]  h-[60vh] relative">
@@ -68,20 +71,26 @@ export default function GalleryModal({
                 </div>
               )}
               <div className="group w-full relative h-full">
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/60  transition-all duration-300 rounded-xl z-10" />
-              <Image
+                              <Image
                 src={images[currentImage]}
                 alt="images"
-                className={`absolute object-contain transition-opacity duration-300  rounded-xl bg-black ${loading ? "opacity-0" : "opacity-100"}`}
+                className={`absolute  object-cover h-full w-full inset-0 opacity-30 rounded-xl blur-3xl transition-opacity duration-300  rounded-xl  ${loading ? "opacity-0" : "opacity-100"}`}
                 fill
                 onLoad={() => setLoading(false)}
               />
-              <div className="relative cursor-pointer group-hover:flex justify-center  z-20 items-center w-full h-full hidden ">
-                <Trash2Icon size={64} className="text-[#ffffff] bg-[#00687A]  p-4 rounded-full " />
+              <Image
+                src={images[currentImage]}
+                alt="images"
+                className={` object-contain transition-opacity duration-300 h-full w-full  rounded-xl  ${loading ? "opacity-0" : "opacity-100"}`}
+                fill
+                onLoad={() => setLoading(false)}
+              />
+              <div onClick={(e)=>{e.stopPropagation(); setDeleteImageOpen(true)}} className="relative cursor-pointer group-hover:flex justify-end  z-20 items-start p-4 w-full h-full hidden ">
+                <Trash2 size={48} className="text-[#ffffff] bg-[#00687abe]  p-2 rounded-full "  />
               </div>
               </div>
             </div>
-            <div className="p-2 flex justify-center items-center ">
+            <div className="flex justify-center items-center ">
               <p className="absolute bottom-10 text-white ">
                 {currentImage + 1} / {images.length}
               </p>
@@ -99,5 +108,7 @@ export default function GalleryModal({
         </div>
       </div>
     </div>
+        <DeleteImageModal onClose={()=>setDeleteImageOpen(false)} isOpen={deleteImageOpen}/>
+</>
   );
 }
