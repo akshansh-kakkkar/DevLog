@@ -6,6 +6,8 @@ import {
   Dot,
   Heart,
   Loader2,
+  PencilIcon,
+  Trash2,
 } from "lucide-react";
 import { JetBrains_Mono, Libertinus_Sans, Poppins } from "next/font/google";
 import { useParams } from "next/navigation";
@@ -17,8 +19,8 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
+  DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -331,12 +333,39 @@ export default function () {
                               <button>
                                 <CircleEllipsis
                                   size={32}
-                                  className="text-[#949494]"
+                                  className="text-[#949494] transition-all p-1 duration-300 hover:bg-[#00687A21] rounded-full cursor-pointer"
                                 />
                               </button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent>
-                              <DropdownMenuItem></DropdownMenuItem>
+                            <DropdownMenuContent
+                              align="end"
+                              sideOffset={5}
+                              className={`min-w-[180px]  rounded-lg bg-white p-1 shadow-lg`}
+                            >
+                              <DropdownMenuItem
+                                className={`flex cursor-pointer gap-2 px-3 py-2  hover:bg-[#00687A21] items-center`}
+                              >
+                                <div className="flex  items-center text-center  gap-4 ">
+                                  <Trash2 size={32} />
+                                  <span
+                                    className={`text-xl ${jetbrains.className}`}
+                                  >
+                                    Delete
+                                  </span>
+                                </div>
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                className={`flex gap-2 px-3 py-2 cursor-pointer hover:bg-[#00687A21] items-center`}
+                              >
+                                <div className="flex items-center text-center  gap-4 ">
+                                  <PencilIcon size={32} />
+                                  <span
+                                    className={`text-xl ${jetbrains.className}`}
+                                  >
+                                    Edit
+                                  </span>
+                                </div>
+                              </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
                         </div>
