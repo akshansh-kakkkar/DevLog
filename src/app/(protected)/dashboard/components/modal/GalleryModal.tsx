@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, Loader2, Trash2Icon } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
@@ -61,12 +61,14 @@ export default function GalleryModal({
           className="bg- select-none rounded-xl p-4 overflow-y-auto"
         >
           <div>
-            <div className="md:w-[500px] w-[200px] sm:w-[450px]  h-[60vh] relative">
+            <div className="md:w-[900px] w-[200px] sm:w-[450px]  h-[60vh] relative">
               {loading && (
                 <div className="absolute inset-0 flex items-center justify-center z-10">
                   <Loader2 className="animate-spin text-[#00687A] w-12 h-12" />
                 </div>
               )}
+              <div className="group w-full relative h-full">
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/60  transition-all duration-300 rounded-xl z-10" />
               <Image
                 src={images[currentImage]}
                 alt="images"
@@ -74,6 +76,10 @@ export default function GalleryModal({
                 fill
                 onLoad={() => setLoading(false)}
               />
+              <div className="relative cursor-pointer group-hover:flex justify-center  z-20 items-center w-full h-full hidden ">
+                <Trash2Icon size={64} className="text-[#ffffff] bg-[#00687A]  p-4 rounded-full " />
+              </div>
+              </div>
             </div>
             <div className="p-2 flex justify-center items-center ">
               <p className="absolute bottom-10 text-white ">

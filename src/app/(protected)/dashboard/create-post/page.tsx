@@ -105,13 +105,12 @@ export default function Page() {
           content,
           coverImage: images.length > 0 ? images : undefined,
           tags,
-          visibility:
-            visibility === "Private"
-              ? "PRIVATE"
-                : "PUBLIC",
+          visibility: visibility === "Private" ? "PRIVATE" : "PUBLIC",
           status,
           scheduledAt:
-            status === "SCHEDULED" && scheduledAt ? new Date(scheduledAt).toISOString() : undefined,
+            status === "SCHEDULED" && scheduledAt
+              ? new Date(scheduledAt).toISOString()
+              : undefined,
         }),
       });
       const data = await response.json();
@@ -168,7 +167,7 @@ export default function Page() {
       <div className="lg:col-span-4 py-8 px-6 ">
         <div>
           <textarea
-          disabled={submitting}
+            disabled={submitting}
             onInput={(e) => {
               const target = e.target as HTMLTextAreaElement;
               target.style.height = "auto";
@@ -260,27 +259,38 @@ export default function Page() {
         </div>
         <div className="lg:mx-12">
           {images.length > 0 && (
-            <>
+            <div className="relative w-full">
               {coverLoading && (
-                <div className="flex absolute inset-0 items-center justify-center bg-black/10 rounded-lg">
+                <div
+                  className="flex absolute inset-0 z-20 items-center justify-center bg-black/10 rounded-2xl"
+                >
                   <Loader2 className="text-[#00687A] w-8 h-8 animate-spin" />
                 </div>
               )}
 
-              <div className="flex cursor-pointer relative flex-row justify-center items-center transition-all duration-300 overflow-hidden my-2 mx4">
+              <div className="flex cursor-pointer relative flex-row justify-center items-center transition-all duration-300 overflow-hidden my-2 mx-4">
                 {images.length > 0 && (
-                  <img
-                    src={images[0]}
-                    onLoad={() => setCoverLoading(false)}
+                  <div 
+                    className="relative w-full h-[300px] overflow-hidden rounded-2xl cursor-pointer"
                     onClick={() => setGallery(true)}
-                    className={`${coverLoading ? "opacity-0" : "opacity-100"} w-full h-48 object-cover rounded-lg`}
-                  />
+                  >
+                    <img
+                      src={images[0]}
+                      className="absolute w-full inset-0 object-cover blur-3xl scale-125 opacity-80 h-full"
+                      alt=""
+                    />
+                    <img
+                      src={images[0]}
+                      onLoad={() => setCoverLoading(false)}
+                      className={`${coverLoading ? "opacity-0" : "opacity-100"} transition-opacity duration-300 relative z-10 w-full h-full object-contain rounded-lg`}
+                      alt="Cover"
+                    />
+                  </div>
                 )}
               </div>
-            </>
+            </div>
           )}
           <TipTapEditor
-        
             images={images}
             setImages={setImages}
             content={content}
@@ -339,7 +349,6 @@ export default function Page() {
                           setVisibility(item);
                           setOpen(false);
                         }}
-                        
                         key={item}
                       >
                         {item}
@@ -500,16 +509,16 @@ export default function Page() {
               </button>
             </div>
             <div>
-                {publishedType === "scheduled" && (
-                  <DateTimePicker
-                    value={scheduledAt}
-                    className={`text-lg ${poppins.className} w-[200px] py-2`}
-                    label={"Pick Data and Time"}
-                    placeholder="Pick Date and Time"
-                    minDate={new Date()}
-                    onChange={setScheduledAt}
-                  />
-                )}
+              {publishedType === "scheduled" && (
+                <DateTimePicker
+                  value={scheduledAt}
+                  className={`text-lg ${poppins.className} w-[200px] py-2`}
+                  label={"Pick Data and Time"}
+                  placeholder="Pick Date and Time"
+                  minDate={new Date()}
+                  onChange={setScheduledAt}
+                />
+              )}
             </div>
             <div className="flex gap-4 py-8 flex-col justify-center items-center text-center">
               <button

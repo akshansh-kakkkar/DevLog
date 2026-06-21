@@ -205,73 +205,76 @@ export default function () {
               <span className="text-xl font-semibold">{likesCount}</span>
             </div>
           </div>
-          <div className="flex justify-center items-center">
-            {images.length > 0 && (
-              <div className="flex items-center gap-2 sm:gap-12 overflow-x-hidden">
-                <div
-                  className="cursor-pointer  z-35  rounded-full  bg-[#00687A] p-1 text-white"
-                  onClick={() => {
-                    setDirection(-1);
-                    setCurrentImage((prev) =>
-                      prev === 0 ? images.length - 1 : prev - 1,
-                    );
-                  }}
-                >
-                  <ChevronLeft size={32} />
-                </div>
-                <div className=" w-full sm:w-[800px] h-[200px] sm:h-[300px] object-cover rounded-lg">
-                  <AnimatePresence mode="wait" custom={direction}>
-                    <motion.img
-                      key={images[currentImage]}
-                      className="w-full  h-full border-4 border-[#00687A] object-center select-none rounded-lg"
-                      src={images[currentImage]}
-                      custom={direction}
-                      alt={post.title || "Post image"}
-                      transition={{ duration: 0.2 }}
-                      variants={{
-                        enter: (dir: number) => ({
-                          x: dir > 0 ? 300 : -300,
-                          opacity: 0,
-                        }),
-                        center: {
-                          x: 0,
-                          opacity: 1,
-                        },
-                        exit: (dir: number) => ({
-                          x: dir > 0 ? -300 : 300,
-                          opacity: 0,
-                        }),
-                      }}
-                      initial="enter"
-                      animate="center"
-                      exit="exit"
-                    />
-                  </AnimatePresence>
-                </div>
-                <div
-                  className="cursor-pointer rounded-full  bg-[#00687A] p-1 text-white"
-                  onClick={() => {
-                    setDirection(1);
-                    setCurrentImage((prev) =>
-                      prev === images.length - 1 ? 0 : prev + 1,
-                    );
-                  }}
-                >
-                  <ChevronRight size={32} />
-                </div>
+          {images.length > 0 && (
+            <div className="flex items-center gap-2 sm:gap-12 overflow-x-hidden">
+              <div
+                className="cursor-pointer  z-35  rounded-full  bg-[#00687A] p-1 text-white"
+                onClick={() => {
+                  setDirection(-1);
+                  setCurrentImage((prev) =>
+                    prev === 0 ? images.length - 1 : prev - 1,
+                  );
+                }}
+              >
+                <ChevronLeft size={32} />
               </div>
-            )}
-          </div>
-          <div className="flex justify-center items-center gap-4">
-            {images.map((_, index) => (
-              <button
-                key={index}
-                className={`w-2 h-2 rounded-full transition-all ${currentImage === index ? "bg-[#00687A]" : "bg-gray-300"}`}
-              ></button>
-            ))}
-          </div>
+              <div className=" relative w-full sm:w-[800px] h-[200px] overflow-hidden border-1 border-[#00687A] sm:h-[300px] object-cover rounded-lg">
+                <img
+                  src={images[currentImage]}
+                  alt=""
+                  className="absolute inset-0 w-full h-full  object-cover blur-3xl scale-125 opacity-80 "
+                />
+
+                <AnimatePresence mode="wait" custom={direction}>
+                  <motion.img
+                    key={images[currentImage]}
+                    className="relative z-10 object-contain w-full h-full"
+                    src={images[currentImage]}
+                    custom={direction}
+                    alt={post.title || "Post image"}
+                    transition={{ duration: 0.2 }}
+                    variants={{
+                      enter: (dir: number) => ({
+                        x: dir > 0 ? 300 : -300,
+                        opacity: 0,
+                      }),
+                      center: {
+                        x: 0,
+                        opacity: 1,
+                      },
+                      exit: (dir: number) => ({
+                        x: dir > 0 ? -300 : 300,
+                        opacity: 0,
+                      }),
+                    }}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                  />
+                </AnimatePresence>
+              </div>
+              <div
+                className="cursor-pointer rounded-full  bg-[#00687A] p-1 text-white"
+                onClick={() => {
+                  setDirection(1);
+                  setCurrentImage((prev) =>
+                    prev === images.length - 1 ? 0 : prev + 1,
+                  );
+                }}
+              >
+                <ChevronRight size={32} />
+              </div>
+            </div>
+          )}
+
+          {images.map((_, index) => (
+            <button
+              key={index}
+              className={`w-2 h-2 rounded-full transition-all ${currentImage === index ? "bg-[#00687A]" : "bg-gray-300"}`}
+            ></button>
+          ))}
           <div
-            className={`md:text-4xl sm:text-3xl text-2xl lg:text-6xl md:px-5 font-bold ${libretinusSans.className} select-none border-b-2 py-2`}
+            className={`md:text-4xl sm:text-3xl text-2xl lg:text-6xl md:px-5 font-bold ${libretinusSans.className} select-none border-b-2`}
           >
             {post.title}
           </div>
@@ -281,7 +284,7 @@ export default function () {
           />
 
           <div className="gap-2 my-4 overflow-x-auto flex">
-            <div className="mt-12 border-t-2 pt-8 w-full ">
+            <div className="border-t-2 pt-8 w-full ">
               <h2 className={`${libretinusSans.className} text-3xl font-bold`}>
                 Comments
               </h2>
@@ -307,17 +310,19 @@ export default function () {
                       <div className="flex justify-between">
                         <div className="flex gap-2 items-center text-center">
                           <div
-                            className={`${jetbrains.className} text-3xl bg-[#00687A] p-3 px-5 font-bold text-white rounded-full`}
+                            className={`${jetbrains.className} text-xl bg-[#00687A] px-2 font-semibold text-white rounded-full`}
                           >
                             {comment.author.name.charAt(0).toUpperCase()}
                           </div>
-                          <div className="flex flex-col">
+                          <div className="flex text-left flex-col">
                             <div
-                              className={`font-semibold text-2xl capitalize text-[#191C1E]`}
+                              className={`font-semibold text-lg capitalize text-[#191C1E]`}
                             >
                               {comment.author.name}
                             </div>
-                            <div className={`text-[#45464D] text-sm mr-24`}>
+                            <div
+                              className={`text-[#45464D] text-sm  text-left`}
+                            >
                               {formatDistanceToNow(
                                 new Date(comment.createdAt),
                                 {
@@ -401,7 +406,8 @@ export default function () {
                 )}
               </div>
             </div>
-
+          </div>
+          <div className="flex justify-start flex-wrap text-center items-center ">
             {post.postTags?.map((postTag: any) => (
               <span
                 key={postTag.tag.name}
