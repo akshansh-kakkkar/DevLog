@@ -15,12 +15,14 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
 import { AnimatePresence, motion } from "framer-motion";
+import content from "@/components/tiptap-templates/simple/data/content.json";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
+import { useSession } from "@/lib/auth-client";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -43,6 +45,9 @@ export default function () {
   const [loading, setLoading] = useState(true);
   const [post, setPost] = useState<any>(null);
   const [liked, setLiked] = useState<any>(null);
+  const [editCommentId, setEditCommentId] = useState<string | null>(null);
+  const [editContent, setEditContent] = useState("");
+
   useEffect(() => {
     const getSinglePost = async () => {
       try {
@@ -81,6 +86,7 @@ export default function () {
   } else if (post) {
     images = getImage(post.content);
   }
+  const { data: session } = useSession();
   const [likesCount, setLikesCount] = useState(0);
   const [likeLoading, setLikeLoading] = useState(false);
   const handleLike = async () => {
@@ -112,7 +118,15 @@ export default function () {
   const [commentPage, setCommentPage] = useState(1);
   const [hasMoreComments, setHasMoreComments] = useState(false);
   const [commentsLoading, setCommentsLoading] = useState(false);
-
+  const [expandComments, setExpandComments] = useState<string[]>([]);
+  const [updateCommentLoading, setUpdateCommentLoading] = useState(false);
+  const toggleComments = (id: string) => {
+    setExpandComments((prev) =>
+      prev.includes(id)
+        ? prev.filter((commentId) => commentId !== id)
+        : [...prev, id],
+    );
+  };
   const fetchComments = async (page = 1) => {
     try {
       setCommentsLoading(true);
@@ -166,7 +180,35 @@ export default function () {
       setCommentLoading(false);
     }
   };
-  const deleteComment = () => {};
+  const updateComment = async (commentId: string) => {
+    try {
+      setUpdateCommentLoading(true);
+      const res = await fetch(`/api/comments/${commentId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          content: editContent,
+        }),
+      });
+      if (!res.ok) throw new Error();
+      setComments((prev) =>
+        prev.map((comment) =>
+          comment.id === commentId
+            ? { ...comment, content: editContent }
+            : comment,
+        ),
+      );
+      setEditCommentId(null);
+      setEditContent("");
+      toast.success("Comment Updated");
+    } catch (error) {
+      toast.error("Failed to edit the comment");
+    } finally {
+      setUpdateCommentLoading(false);
+    }
+  };
   return (
     <>
       {loading || !post ? (
@@ -222,7 +264,7 @@ export default function () {
                 <img
                   src={images[currentImage]}
                   alt=""
-                  className="absolute inset-0 w-full h-full  object-cover blur-3xl scale-125 opacity-80 "
+                  className="absolute inset-0 w-full h-full  object-cover blur-3xl scale-125 "
                 />
 
                 <AnimatePresence mode="wait" custom={direction}>
@@ -266,13 +308,15 @@ export default function () {
               </div>
             </div>
           )}
-
-          {images.map((_, index) => (
-            <button
-              key={index}
-              className={`w-2 h-2 rounded-full transition-all ${currentImage === index ? "bg-[#00687A]" : "bg-gray-300"}`}
-            ></button>
-          ))}
+          <div className="flex justify-center items-center gap-2">
+            {images.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentImage(index)}
+                className={`w-4 h-2 cursor-pointer rounded-full transition-all ${currentImage === index ? "bg-[#00687A]" : "bg-gray-300"}`}
+              ></button>
+            ))}
+          </div>
           <div
             className={`md:text-4xl sm:text-3xl text-2xl lg:text-6xl md:px-5 font-bold ${libretinusSans.className} select-none border-b-2`}
           >
@@ -280,7 +324,7 @@ export default function () {
           </div>
           <div
             dangerouslySetInnerHTML={{ __html: post.content }}
-            className={`${poppins.className} [&_ul]:list-disc [&_mark]:bg-[#00687A]/80 [&_mark]:text-white [&_mark]:px-2 [&_mark]:py-1 w-full ProseMirror [&_h1]:text-4xl [&_h1]:font-semibold [&_h1]:mt-2 [&_h1]:mb-2 [&_h2]:text-2xl [&_h2]:font-semibold [&_h2]:mt-2 [&_h2]:mb-2 [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:my-4 [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:my-4  [&_code]:px-1 [&_code]:py-0.5 [&_code]:rounded [&_code]:font-mono [&_pre]:bg-gray-900 [&_pre]:text-white [&_pre]:p-4 [&_pre]:rounded-lg [&_pre]:my-4 [&_ul]:ml-6 [&_ol]:list-decimal [&_ol]:ml-6`}
+            className={`${poppins.className} [&_ul]:list-disc wrap-break-word [&_mark]:bg-[#00687A]/80 [&_mark]:text-white [&_mark]:px-2 [&_mark]:py-1 w-full ProseMirror [&_h1]:text-4xl [&_h1]:font-semibold [&_h1]:mt-2 [&_h1]:mb-2 [&_h2]:text-2xl [&_h2]:font-semibold [&_h2]:mt-2 [&_h2]:mb-2 [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:my-4 [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:my-4  [&_code]:px-1 [&_code]:py-0.5 [&_code]:rounded [&_code]:font-mono [&_pre]:bg-gray-900 [&_pre]:text-white [&_pre]:p-4 [&_pre]:rounded-lg [&_pre]:my-4 [&_ul]:ml-6 [&_ol]:list-decimal [&_ol]:ml-6`}
           />
 
           <div className="gap-2 my-4 overflow-x-auto flex">
@@ -332,55 +376,87 @@ export default function () {
                             </div>
                           </div>
                         </div>
-                        <div>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger>
-                              <button>
-                                <CircleEllipsis
-                                  size={32}
-                                  className="text-[#949494] transition-all p-1 duration-300 hover:bg-[#00687A21] rounded-full cursor-pointer"
-                                />
-                              </button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent
-                              align="end"
-                              sideOffset={5}
-                              className={`min-w-[180px]  rounded-lg bg-white p-1 shadow-lg`}
-                            >
-                              <DropdownMenuItem
-                                className={`flex cursor-pointer gap-2 px-3 py-2  hover:bg-[#00687A21] items-center`}
+                        {comment.author.id === session?.user?.id && (
+                          <div>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger>
+                                <button>
+                                  <CircleEllipsis
+                                    size={32}
+                                    className="text-[#949494] transition-all p-1 duration-300 hover:bg-[#00687A21] rounded-full cursor-pointer"
+                                  />
+                                </button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent
+                                align="end"
+                                sideOffset={5}
+                                className={`min-w-[180px]  rounded-lg bg-white p-1 shadow-lg`}
                               >
-                                <div className="flex  items-center text-center  gap-4 ">
-                                  <Trash2 size={32} />
-                                  <span
-                                    className={`text-xl ${jetbrains.className}`}
-                                  >
-                                    Delete
-                                  </span>
-                                </div>
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                className={`flex gap-2 px-3 py-2 cursor-pointer hover:bg-[#00687A21] items-center`}
-                              >
-                                <div className="flex items-center text-center  gap-4 ">
-                                  <PencilIcon size={32} />
-                                  <span
-                                    className={`text-xl ${jetbrains.className}`}
-                                  >
-                                    Edit
-                                  </span>
-                                </div>
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </div>
+                                <DropdownMenuItem
+                                  className={`flex cursor-pointer gap-2 px-3 py-2  hover:bg-[#00687A21] items-center`}
+                                >
+                                  <div className="flex  items-center text-center  gap-4 ">
+                                    <Trash2 size={32} />
+                                    <span
+                                      className={`text-xl ${jetbrains.className}`}
+                                    >
+                                      Delete
+                                    </span>
+                                  </div>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  onClick={() => {
+                                    setEditCommentId(comment.id);
+                                    setEditContent(comment.content);
+                                  }}
+                                  className={`flex gap-2 px-3 py-2 cursor-pointer hover:bg-[#00687A21] items-center`}
+                                >
+                                  <div className="flex items-center text-center  gap-4 ">
+                                    <PencilIcon size={32} />
+                                    <span
+                                      className={`text-xl ${jetbrains.className}`}
+                                    >
+                                      Edit
+                                    </span>
+                                  </div>
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </div>
+                        )}
                       </div>
                     </div>
-                    <div
-                      className={`max-w-[900px] mx-4 whitespace-pre-wrap break-words text-[#191C1E] ${jetbrains.className} my-2`}
-                    >
-                      {comment.content}
-                    </div>
+                    {editCommentId === comment.id ? (
+                      <div className="mx-4 my-2">
+                        <textarea
+                          value={editContent}
+                          onChange={(e) => setEditContent(e.target.value)}
+                          className={`${jetbrains.className} w-full rounded-lg border-2 border-[#00687A] outline-none p-2`}
+                        />
+                        <div className="flex gap-2 mt-2">
+                          <button
+                          disabled={updateCommentLoading}
+                            onClick={() => {
+                              setEditCommentId(null);
+                              setEditContent("");
+                            }}
+                            className={`border-2 px-2 py-1 cursor-pointer disabled:cursor-not-allowed rounded-lg text-gray-500 border-gray-500 text-lg`}
+                          >
+                            Cancel
+                          </button>
+                          <button disabled={updateCommentLoading} className="px-2 border-2 py-1 rounded-lg text-white transition-all duration-300  border-[#00687A] bg-[#00687A] cursor-pointer disabled:cursor-not-allowed disabled:bg-[#00687A] disabled:hover:bg-[#00687A] hover:bg-[#00687ada]" onClick={() => updateComment(comment.id)}>
+                            {updateCommentLoading ? <Loader2 className="animate-spin text-white" size={24} /> : "Save"}
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div
+                        onClick={() => toggleComments(comment.id)}
+                        className={`max-w-[900px] cursor-pointer  mx-4 whitespace-pre-wrap break-words text-[#191C1E] ${jetbrains.className} my-2 ${expandComments.includes(comment.id) ? "" : "truncate line-clamp-4"}`}
+                      >
+                        {comment.content}  
+                      </div>
+                    )}
                   </div>
                 ))}
                 {hasMoreComments && (
@@ -407,7 +483,7 @@ export default function () {
               </div>
             </div>
           </div>
-          <div className="flex justify-start flex-wrap text-center items-center ">
+          <div className="flex gap-4 mb-2  justify-start flex-wrap text-center items-center ">
             {post.postTags?.map((postTag: any) => (
               <span
                 key={postTag.tag.name}

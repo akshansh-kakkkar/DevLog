@@ -128,13 +128,18 @@ export default function Page() {
                         dangerouslySetInnerHTML={{ __html: post.content }}
                       />{" "}
                       {post.coverImage?.length > 0 && (
-                        <div className="w-full my-5 flex justify-center items-center  rounded-lg relative h-[300px]">
+                        <div className="w-full my-5 flex justify-center overflow-hidden items-center  rounded-lg relative h-[300px]">
                           <Image
                             alt={post.title || "Cover image"}
                             fill
-                            sizes="800px"
+                            className="absolute border-2 scale-125 blur-3xl object-cover rounded-lg"
+                            src={post.coverImage[0]}
+                          />
+                          <Image
+                            alt={post.title || "Cover image"}
+                            fill
                             loading="eager"
-                            className="relative border-2 border-[#00687A] object-cover rounded-lg"
+                            className="absolute border-2 border-[#00687A] object-contain rounded-lg"
                             src={post.coverImage[0]}
                           />
                         </div>
@@ -142,7 +147,7 @@ export default function Page() {
                       <div className="text-white  bg-[#00687A] ease-out transition-all duration-400  w-fit p-2 right-4 -translate-y-4 group-hover:translate-y-0 top-4 rounded-full flex opacity-0 group-hover:opacity-100 absolute">
                         <ChevronRight />
                       </div>
-                      <div className="gap-2 my-4 overflow-x-auto flex">
+                      <div className="gap-2  my-4 overflow-x-auto flex">
                         {post.postTags?.map((postTag: any) => (
                           <span className={`text-sm flex gap-2 md:text-lg bg-[#00687A] text-white px-3 py-1 rounded-md ${poppins2.className}`}>
                             <span>#</span> {postTag.tag.name}
