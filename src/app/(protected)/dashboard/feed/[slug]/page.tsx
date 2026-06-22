@@ -234,8 +234,10 @@ export default function () {
         <div className="mt-12  mx-5 md:mx-12 lg:mx-22 flex gap-7 flex-col">
           <div className="flex justify-between items-center ">
             <div className="flex items-center  gap-2">
-              
-              <Link href={`/dashboard/users/${post.author.id}`} className="w-12 h-12 cursor-pointer rounded-full flex justify-center items-center text-center border-[#00687A] border-2 bg-[#00687A] relative">
+              <Link
+                href={`/dashboard/users/${post.author.id}`}
+                className="w-12 h-12 cursor-pointer rounded-full flex justify-center items-center text-center border-[#00687A] border-2 bg-[#00687A] relative"
+              >
                 {post.author.image ? (
                   <Image
                     className="absolute  rounded-full"
@@ -251,8 +253,8 @@ export default function () {
                   </div>
                 )}
               </Link>
-              <Link 
-              href={`/dashboard/users/${post.author.id}`}
+              <Link
+                href={`/dashboard/users/${post.author.id}`}
                 className={`${jetbrains.className} capitalize hover:underline cursor-pointer  text-[#191C1E] p-1 rounded-sm text-xl  font-bold `}
               >
                 {post.author.name}
@@ -365,7 +367,8 @@ export default function () {
           </div>
           <div
             dangerouslySetInnerHTML={{ __html: post.content }}
-            className={`${poppins.className} [&_ul]:list-disc wrap-break-word [&_mark]:bg-[#00687A]/80 [&_mark]:text-white [&_mark]:px-2 [&_mark]:py-1 w-full ProseMirror [&_h1]:text-4xl [&_h1]:font-semibold [&_h1]:mt-2 [&_h1]:mb-2 [&_h2]:text-2xl [&_h2]:font-semibold [&_h2]:mt-2 [&_h2]:mb-2 [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:my-4 [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:my-4  [&_code]:px-1 [&_code]:py-0.5 [&_code]:rounded [&_code]:font-mono [&_pre]:bg-gray-900 [&_pre]:text-white [&_pre]:p-4 [&_pre]:rounded-lg [&_pre]:my-4 [&_ul]:ml-6 [&_ol]:list-decimal [&_ol]:ml-6`}
+            className={`${poppins.className} [&_pre]:whitespace-pre-wrap
+[&_pre]:break-words [&_ul]:list-disc wrap-break-word [&_mark]:bg-[#00687A]/80 [&_mark]:text-white [&_mark]:px-2 [&_mark]:py-1 w-full ProseMirror [&_h1]:text-4xl [&_h1]:font-semibold [&_h1]:mt-2 [&_h1]:mb-2 [&_h2]:text-2xl [&_h2]:font-semibold [&_h2]:mt-2 [&_h2]:mb-2 [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:my-4 [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:my-4  [&_code]:px-1 [&_code]:py-0.5 [&_code]:rounded [&_code]:font-mono [&_pre]:bg-gray-900 [&_pre]:text-white [&_pre]:p-4 [&_pre]:rounded-lg [&_pre]:my-4 [&_ul]:ml-6 [&_ol]:list-decimal [&_ol]:ml-6`}
           />
 
           <div className="gap-2 my-4 overflow-x-auto flex">
@@ -394,7 +397,8 @@ export default function () {
                     <div className="flex flex-col">
                       <div className="flex justify-between">
                         <div className="flex gap-2 items-center text-center">
-                          <Link href={`/dashboard/users/${comment.author.id}`}
+                          <Link
+                            href={`/dashboard/users/${comment.author.id}`}
                             className={`${jetbrains.className} cursor-pointer w-8 h-8 flex items-center text-center justify-center relative text-xl bg-[#00687A] px-2 font-semibold text-white rounded-full`}
                           >
                             {comment.author.image ? (
@@ -411,7 +415,8 @@ export default function () {
                             )}
                           </Link>
                           <div className="flex text-left flex-col">
-                            <Link href={`/dashboard/users/${comment.author.id}`}
+                            <Link
+                              href={`/dashboard/users/${comment.author.id}`}
                               className={`font-semibold cursor-pointer hover:underline text-lg capitalize text-[#191C1E]`}
                             >
                               {comment.author.name}

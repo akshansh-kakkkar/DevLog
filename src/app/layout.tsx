@@ -1,5 +1,4 @@
-
-"use client"
+import { Metadata } from "next";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
 import "./globals.css";
@@ -8,8 +7,16 @@ import { Toaster } from "sonner";
 import { Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
 import Provider from "./components/Provider";
+
 const geist = Geist({ subsets: ['latin'], variable: '--font-sans' });
 
+export const metadata: Metadata = {
+  title: "Blog Application",
+  description: "A Full Stack Blog Application",
+  icons: {
+    icon: '/favicon.ico',
+  },
+};
 
 export default function RootLayout({
   children,
