@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useSession } from "@/lib/auth-client";
 import DeleteCommentModal from "../../components/modal/DeleteCommentModal";
+import Image from "next/image";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -232,6 +233,30 @@ export default function () {
         <div className="mt-12  mx-5 md:mx-12 lg:mx-22 flex gap-7 flex-col">
           <div className="flex justify-between items-center ">
             <div className="flex items-center  gap-2">
+              <div className="w-12 h-12 rounded-full flex justify-center items-center text-center border-[#00687A] border-2 bg-[#00687A] relative">
+                {post.author.image ? (
+                  <Image
+                    className="absolute  rounded-full"
+                    fill
+                    src={post?.author.image}
+                    alt={post.author.name}
+                  />
+                ) : (
+                  <div
+                    className={`${poppins.className} text-white font-medium text-2xl`}
+                  >
+                    {post.author.name.charAt(0).toUpperCase()}
+                  </div>
+                )}
+              </div>
+              <div
+                className={`${jetbrains.className} capitalize  text-[#191C1E] p-1 rounded-sm text-xl  font-bold `}
+              >
+                {post.author.name}
+              </div>
+              <div>
+                <Dot className="text-gray-400 " size={42} />
+              </div>
               <div
                 className={`${jetbrains.className}  text-[#45464D] bg-[#E6E8EA] p-1 rounded-sm text-xs font-bold `}
               >
@@ -367,9 +392,20 @@ export default function () {
                       <div className="flex justify-between">
                         <div className="flex gap-2 items-center text-center">
                           <div
-                            className={`${jetbrains.className} text-xl bg-[#00687A] px-2 font-semibold text-white rounded-full`}
+                            className={`${jetbrains.className} w-8 h-8 flex items-center text-center justify-center relative text-xl bg-[#00687A] px-2 font-semibold text-white rounded-full`}
                           >
-                            {comment.author.name.charAt(0).toUpperCase()}
+                            {comment.author.image ? (
+                              <Image
+                                src={comment.author.image}
+                                fill
+                                alt={comment.author.name}
+                                className="rounded-full absolute"
+                              />
+                            ) : (
+                              <div>
+                                {comment.author.name.charAt(0).toUpperCase()}
+                              </div>
+                            )}
                           </div>
                           <div className="flex text-left flex-col">
                             <div
@@ -526,7 +562,7 @@ export default function () {
       )}
       <DeleteCommentModal
         isOpen={isDeleteOpen}
-        onDelete={ async() => {
+        onDelete={async () => {
           if (selectedCommentId) {
             await deleteComment(selectedCommentId);
           }

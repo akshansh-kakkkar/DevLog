@@ -1,12 +1,11 @@
 "use client";
-import { Bookmark, ChevronRight, Loader2, Rss, Search } from "lucide-react";
+import { ChevronRight, Loader2, Rss, Search } from "lucide-react";
 import { JetBrains_Mono, Libertinus_Sans, Poppins } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { toast } from "sonner";
-import page from '../../../contact/page';
 import { Post } from "@/app/Types";
 const poppins = Poppins({
   subsets: ["latin"],
@@ -20,59 +19,62 @@ const jetbrains = JetBrains_Mono({
   subsets: ["latin"],
 });
 const poppins2 = Poppins({
-  subsets: ['latin'],
-  weight: ['400']
-})
+  subsets: ["latin"],
+  weight: ["400"],
+});
 export default function Page() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(false);
-    const [page, setPage] = useState(1);
+  const [page, setPage] = useState(1);
   const [loadingMore, setLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const getPosts = async (pageNumber = 1) => {
-      try {
-        setLoading(true);
-        const response = await fetch(`/api/posts?page=${pageNumber}&limit=2`);
-        const data = await response.json();
-        if(pageNumber ===1){
+  const getPosts = useCallback(async (pageNumber = 1) => {
+    try {
+      const response = await fetch(`/api/posts?page=${pageNumber}&limit=2`);
+      const data = await response.json();
+      if (pageNumber === 1) {
         setPosts(data.posts);
-        }
-        else{
-          setPosts(prev => [...prev, ...data.posts])
-        }
-        setHasMore(data.pagination.hasMore)
-      } catch (error) {
-        return toast.error("something went wrong.");
-      } finally {
-        setLoading(false);
+      } else {
+        setPosts((prev) => [...prev, ...data.posts]);
       }
-    };
-    getPosts();
-  }, []);
-  useEffect(()=>{
-    const observer = new IntersectionObserver(
-      async ([entry]) =>{
-        if(
-          entry.isIntersecting && hasMore && !loadingMore
-        ){
-          setLoadingMore(true)
-          const nextPage = page + 1;
-          await getPosts(nextPage);
-          setPage(nextPage);
-          setLoadingMore(false)
-        }
-      }, {
-        threshold : 0.1
-      }
-    )
-    if(!loadMoreRef.current){
-      observer.observe(loadMoreRef.current)
+      setHasMore(data.pagination.hasMore);
+    } catch (error) {
+      return toast.error("something went wrong.");
     }
-    return observer.disconnect()
-  }, [page, hasMore, loadMoreRef])
+  }, []);
+
+  useEffect(() => {
+    setLoading(true);
+    getPosts(1).finally(() => {
+      setLoading(false);
+    });
+  }, [getPosts]);
+  const fetchRef = useRef(false)
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      async ([entry]) => {
+        if (!entry.isIntersecting || !hasMore || loadingMore || fetchRef.current) {
+          return;
+        }
+        fetchRef.current = true;
+        setLoadingMore(true);
+        const nextPage = page + 1;
+        await getPosts(nextPage);
+        setPage(nextPage);
+        setLoadingMore(false);
+        fetchRef.current = false
+      },
+      {
+        threshold: 0.1,
+      },
+    );
+    if (loadMoreRef.current) {
+      observer.observe(loadMoreRef.current);
+    }
+    return ()=> observer.disconnect();
+  }, [page, hasMore, loadingMore, loading, getPosts]);
   return (
     <>
       {loading ? (
@@ -180,9 +182,12 @@ export default function Page() {
                       <div className="text-white  bg-[#00687A] ease-out transition-all duration-400  w-fit p-2 right-4 -translate-y-4 group-hover:translate-y-0 top-4 rounded-full flex opacity-0 group-hover:opacity-100 absolute">
                         <ChevronRight />
                       </div>
-                      <div className="gap-2  my-4 overflow-x-auto flex">
+                      <div className="gap-2   my-4 overflow-x-auto flex">
                         {post.postTags?.map((postTag: any) => (
-                          <span className={`text-sm flex gap-2 md:text-lg bg-[#00687A] text-white px-3 py-1 rounded-md ${poppins2.className}`}>
+                          <span
+                          key={postTag.tag.id}
+                            className={`text-sm my-2 flex gap-2 md:text-lg bg-[#00687A] text-white px-3 py-1 rounded-md ${poppins2.className}`}
+                          >
                             <span>#</span> {postTag.tag.name}
                           </span>
                         ))}
@@ -192,9 +197,19 @@ export default function Page() {
                 );
               })}
             </div>
+                            <div ref={loadMoreRef} className="h-20">
+        {loadingMore && (
+          <div className="flex flex-col w-full items-center justify-center py-2">
+            <Loader2 size={40} className="animate-spin text-[#00687A]" />
+            <span className={`${poppins.className} text-gray-400 text-xs animate-pulse duration-300 transition-all `}>Loading More Posts For You</span>
           </div>
+        )}
+      </div>
+          </div>
+
         </div>
       )}
+
     </>
   );
 }
