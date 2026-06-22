@@ -3,9 +3,10 @@ import { useSession } from "@/lib/auth-client";
 import { Geist, Libertinus_Sans, JetBrains_Mono } from "next/font/google";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { BookText, Code, Globe, Mail, MapPin, Users } from "lucide-react";
+import { BookText, Code, Eye, Globe, Loader2, Mail, MapPin, Users } from "lucide-react";
 import BioModal from "./components/BioModel";
 import Link from "next/link";
+import { toast } from "sonner";
 
 const geist = Geist({
   subsets: ["latin"],
@@ -19,18 +20,47 @@ const JetBrains = JetBrains_Mono({
 });
 export default function overView() {
   const [user, setUser] = useState<any>(null);
+  const [stats, setstats] = useState({totalPosts : 0, totalReads : 0})
   const { data: session } = useSession();
   const [showbioModal, setShowbioModal] = useState(false);
+  const [statsLoading, setStatsLoading] = useState(false);
   const userId = session?.user?.id;
   useEffect(() => {
     fetch(`/api/users/${userId}`)
       .then((res) => res.json())
       .then((data) => setUser(data));
   }, [userId]);
+  useEffect(()=>{
+    const getStats = async()=>{
+      try{
+        setStatsLoading(true)
+     const res = await fetch('/api/dashboard/stats');
+     const data = await res.json();
+     setstats(data)
+      }
+      catch(error){
+        toast.error("Something went wrong ")
+      }
+      finally{
+        setStatsLoading(false)
+      }
+    } 
 
+  })
+    const formatNumber = (num: number) => {
+    return new Intl.NumberFormat("en", {
+      notation: "compact",
+      maximumFractionDigits: 1,
+    }).format(num);
+  };
   return (
     <div className=" bg-[#F7F9FB] ">
+      {statsLoading?(
+        <Loader2 size={64} className="animate-spin text-[#00687A]" />
+      ) : (
+
       <div className="flex md:mx-22 flex-col gap-8">
+
         <div className="flex  sm:justify-start justify-center flex-col gap-4 border-[#C6C6CD] border-b-2 pb-2 ">
           <div
             className={`${geist.className} text-[#2D2D2D] text-4xl font-semibold`}
@@ -189,21 +219,23 @@ export default function overView() {
                 <div><BookText className="text-[#76777D]" /></div>
               </div>
               <div className={`${geist.className} text-[#00687A] text-7xl`}>
-                42
+                {stats.totalPosts}
               </div>
             </div>
             <div className="bg-whtie w-full border-1 flex gap-12 flex-col border-[#C6C6CD] p-6 rounded-xl">
               <div className="flex justify-between items-center">
-                <p className={`${JetBrains.className} text-[#76777D]`}>FOLLOWERS</p>
-                <div><Users className="text-[#76777D]" /></div>
+                <p className={`${JetBrains.className} text-[#76777D]`}>VIEWS</p>
+                <div><Eye className="text-[#76777D]" /></div>
               </div>
               <div className={`${geist.className} text-[#00687A] text-7xl`}>
-                +22K
+                {formatNumber(stats.totalReads)}
               </div>
             </div>
           </div>
         </div>
       </div>
+            )}
+
     </div>
   );
 }

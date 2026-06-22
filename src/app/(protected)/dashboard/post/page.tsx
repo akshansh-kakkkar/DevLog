@@ -189,13 +189,13 @@ export default function Page() {
                           sideOffset={5}
                         >
                           <DropdownMenuItem className="flex items-center gap-2  px-3 py-2 hover:bg-[#00687A21]">
-                            <button className=" justify-center flex text-center gap-5 items-center transition-all duration-300 rounded-lg cursor-pointer">
+                            <button onClick={()=> toast.error("This functionality is not avialable yet.")} className=" justify-center flex text-center gap-5 items-center transition-all duration-300 rounded-lg cursor-pointer">
                               <ChartColumn />
                               <span>Analytics</span>
                             </button>
                           </DropdownMenuItem>
-                          <DropdownMenuItem className="flex items-center gap-2  px-3 py-2 hover:bg-[#00687A21]">
-                            <button className=" justify-center flex text-center gap-5 items-center transition-all duration-300 rounded-lg cursor-pointer">
+                          <DropdownMenuItem  className="flex items-center gap-2  px-3 py-2 hover:bg-[#00687A21]">
+                            <button onClick={()=> toast.error("This functionality is not available yet")} className=" justify-center flex text-center gap-5 items-center transition-all duration-300 rounded-lg cursor-pointer">
                               <Edit />
                               <span>Edit</span>
                             </button>
@@ -303,13 +303,13 @@ export default function Page() {
                       <div>{new Date(post.createdAt).toLocaleDateString()}</div>
                     </div>
                     <div className="flex gap-4">
-                      <button>
+                      <button onClick={()=> toast.error("This functionality is not available yet")}>
                         <ChartColumn
                           className="hover:bg-[#00687a21] rounded-lg p-2 cursor-pointer transition-all duration-300"
                           size={32}
                         />
                       </button>
-                      <button>
+                      <button onClick={()=>toast.error("This functionality is not available yet.")}>
                         <Edit
                           className="hover:bg-[#00687a21] rounded-lg p-2 cursor-pointer transition-all duration-300"
                           size={32}

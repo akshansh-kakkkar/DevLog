@@ -34,8 +34,8 @@ const SideBar = () => {
         </div>
         <div className="ml-12 mt-6">
           <Link
-            href="/dashboard"
-            className={`${pathName === "/dashboard" ? "w-[185px]  rounded-lg p-2 text-white bg-[#00687A]" : "hover:bg-accent"} p-2 w-[185px] rounded-lg flex justify-start transition-all duration-300 gap-2 items-center text-[#45464D]  text-center text-md ${poppins.className} font-medium`}
+            href="/dashboard/analytics"
+            className={`${pathName === "/dashboard/analytics" ? "w-[185px]  rounded-lg p-2 text-white bg-[#00687A]" : "hover:bg-accent"} p-2 w-[185px] rounded-lg flex justify-start transition-all duration-300 gap-2 items-center text-[#45464D]  text-center text-md ${poppins.className} font-medium`}
           >
             <span>
               <LayoutDashboard />
@@ -76,17 +76,7 @@ const SideBar = () => {
             <span>Posts</span>
           </Link>
         </div>
-        <div className="ml-12 mt-2">
-          <Link
-            href="/dashboard/analytics"
-            className={`${pathName === "/dashboard/analytics" ? "w-[185px]  rounded-lg p-2 text-white bg-[#00687A]" : "hover:bg-accent"} p-2 w-[185px] rounded-lg flex justify-start transition-all duration-300 gap-2 items-center text-[#45464D]  text-center text-md ${poppins.className} font-medium`}
-          >
-            <span>
-              <ChartBarBigIcon />
-            </span>
-            <span>Analytics</span>
-          </Link>
-        </div>
+
       </div>
     </div>
   );

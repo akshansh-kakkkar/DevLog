@@ -61,7 +61,6 @@ export default function Page() {
         setAnalyticsLoading(true);
         const res = await fetch("/api/dashboard/stats");
         const data = await res.json();
-        console.log(data);
         setstats(data);
       } catch (error) {
         toast.error("Failed to fetch stats");
@@ -441,13 +440,13 @@ export default function Page() {
                             sideOffset={5}
                           >
                             <DropdownMenuItem className="flex items-center gap-2  px-3 py-2 hover:bg-[#00687A21]">
-                              <div className=" justify-center flex text-center gap-5 items-center transition-all duration-300 rounded-lg cursor-pointer">
+                              <div onClick={()=>toast.error("This functionality is not available yet")} className=" justify-center flex text-center gap-5 items-center transition-all duration-300 rounded-lg cursor-pointer">
                                 <ChartColumn />
                                 <span>Analytics</span>
                               </div>
                             </DropdownMenuItem>
                             <DropdownMenuItem className="flex items-center gap-2  px-3 py-2 hover:bg-[#00687A21]">
-                              <div className=" justify-center flex text-center gap-5 items-center transition-all duration-300 rounded-lg cursor-pointer">
+                              <div onClick={()=> toast.error("This functionality is not available yet.")} className=" justify-center flex text-center gap-5 items-center transition-all duration-300 rounded-lg cursor-pointer">
                                 <Pencil />
                                 <span>Edit</span>
                               </div>

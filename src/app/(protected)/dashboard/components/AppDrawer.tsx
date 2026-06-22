@@ -77,13 +77,13 @@ export default function AppDrawer() {
                   <div className="flex flex-wrap justify-start gap-12 items-center">
                     <div className="flex  flex-col  justify-center items-center text-center duration-300  gap-2 text-sm transition-all">
                       <Link
-                        href="/dashboard"
-                        className={`border border-[#00687A] transition-all   duration-300 rounded-full flex  items-center text-center justify-center  bg-white shadow-lg ${pathName === "/dashboard" ? "" : "hover-:bg-accent p-2"}`}
+                        href="/dashboard/analytics"
+                        className={`border border-[#00687A] transition-all   duration-300 rounded-full flex  items-center text-center justify-center  bg-white shadow-lg ${pathName === "/dashboard/analytics" ? "" : "hover-:bg-accent p-2"}`}
                       >
                         <span>
                           <LayoutDashboard
-                            className={`${pathName === "/dashboard" ? " bg-[#00687A] text-white p-2 rounded-full " : "text-[#00687A] hover:bg-accent"}`}
-                            size={pathName === "/dashboard" ? 54 : 32}
+                            className={`${pathName === "/dashboard/analytics" ? " bg-[#00687A] text-white p-2 rounded-full " : "text-[#00687A] hover:bg-accent"}`}
+                            size={pathName === "/dashboard/analytics" ? 54 : 32}
                             strokeWidth={2}
                           />
                         </span>
@@ -131,35 +131,20 @@ export default function AppDrawer() {
                     <div className="flex flex-col  justify-center items-center text-center duration-300  gap-2 text-sm transition-all">
                       <Link
                         href="/dashboard/post"
-                        className={`border border-[#00687A] transition-all   duration-300 rounded-full flex  items-center text-center justify-center  bg-white shadow-lg ${pathName === "/dashboard/create-post" ? "" : "hover-:bg-accent p-2"}`}
+                        className={`border border-[#00687A] transition-all duration-300 rounded-full flex  items-center text-center justify-center  bg-white shadow-lg ${pathName === "/dashboard/create-post" ? "p-2" : "hover-:bg-accent "}`}
                       >
                         <span>
-                          <FileIcon
+                          <StickyNotePlus
                             className={`${pathName === "/dashboard/post" ? " bg-[#00687A] text-white p-2 rounded-full " : "text-[#00687A] hover:bg-accent"}`}
-                            size={pathName === "/dashboard/post" ? 54 : 32}
+                            size={
+                              pathName === "/dashboard/post" ? 54 : 32
+                            }
                             strokeWidth={2}
                           />
                         </span>
                       </Link>
                       <span className={`${poppins.className} text-sm`}>
-                        Posts
-                      </span>
-                    </div>
-                    <div className="flex flex-col  justify-center items-center text-center duration-300  gap-2 text-sm transition-all">
-                      <Link
-                        href="/dashboard/analytics"
-                        className={`border border-[#00687A] transition-all   duration-300 rounded-full flex  items-center text-center justify-center  bg-white shadow-lg ${pathName === "/dashboard/create-post" ? "" : "hover-:bg-accent "}`}
-                      >
-                        <span>
-                          <ChartBarBigIcon
-                            className={`${pathName === "/dashboard/analytics" ? " bg-[#00687A] text-white p-2 rounded-full " : "text-[#00687A] hover:bg-accent"}`}
-                            size={pathName === "/dashboard/analytics" ? 54 : 32}
-                            strokeWidth={2}
-                          />
-                        </span>
-                      </Link>
-                      <span className={`${poppins.className} text-sm`}>
-                        Analytics
+                        Post
                       </span>
                     </div>
                   </div>
