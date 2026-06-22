@@ -15,7 +15,6 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
 import { AnimatePresence, motion } from "framer-motion";
-import content from "@/components/tiptap-templates/simple/data/content.json";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,6 +22,7 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { useSession } from "@/lib/auth-client";
+import DeleteCommentModal from "../../components/modal/DeleteCommentModal";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -72,6 +72,7 @@ export default function () {
       getSinglePost();
     }
   }, [slug]);
+
   const getImage = (html: string) => {
     const doc = new DOMParser().parseFromString(html, "text/html");
     return Array.from(doc.querySelectorAll("img"))
@@ -110,6 +111,10 @@ export default function () {
       setLikeLoading(false);
     }
   };
+  const [selectedCommentId, setSelectedCommentId] = useState<string | null>(
+    null,
+  );
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
   const [direction, setDirection] = useState(1);
   const [comments, setComments] = useState<any[]>([]);
@@ -208,6 +213,14 @@ export default function () {
     } finally {
       setUpdateCommentLoading(false);
     }
+  };
+  const deleteComment = async (commentId: string) => {
+    const res = await fetch(`/api/comments/${commentId}`, {
+      method: "DELETE",
+    });
+    if (!res.ok) throw new Error();
+    setComments((prev) => prev.filter((comment) => comment.id !== commentId));
+    setIsDeleteOpen(false);
   };
   return (
     <>
@@ -380,12 +393,12 @@ export default function () {
                           <div>
                             <DropdownMenu>
                               <DropdownMenuTrigger>
-                                <button>
+                                <div>
                                   <CircleEllipsis
                                     size={32}
                                     className="text-[#949494] transition-all p-1 duration-300 hover:bg-[#00687A21] rounded-full cursor-pointer"
                                   />
-                                </button>
+                                </div>
                               </DropdownMenuTrigger>
                               <DropdownMenuContent
                                 align="end"
@@ -393,6 +406,10 @@ export default function () {
                                 className={`min-w-[180px]  rounded-lg bg-white p-1 shadow-lg`}
                               >
                                 <DropdownMenuItem
+                                  onClick={() => {
+                                    setSelectedCommentId(comment.id);
+                                    setIsDeleteOpen(true);
+                                  }}
                                   className={`flex cursor-pointer gap-2 px-3 py-2  hover:bg-[#00687A21] items-center`}
                                 >
                                   <div className="flex  items-center text-center  gap-4 ">
@@ -435,7 +452,7 @@ export default function () {
                         />
                         <div className="flex gap-2 mt-2">
                           <button
-                          disabled={updateCommentLoading}
+                            disabled={updateCommentLoading}
                             onClick={() => {
                               setEditCommentId(null);
                               setEditContent("");
@@ -444,8 +461,19 @@ export default function () {
                           >
                             Cancel
                           </button>
-                          <button disabled={updateCommentLoading} className="px-2 border-2 py-1 rounded-lg text-white transition-all duration-300  border-[#00687A] bg-[#00687A] cursor-pointer disabled:cursor-not-allowed disabled:bg-[#00687A] disabled:hover:bg-[#00687A] hover:bg-[#00687ada]" onClick={() => updateComment(comment.id)}>
-                            {updateCommentLoading ? <Loader2 className="animate-spin text-white" size={24} /> : "Save"}
+                          <button
+                            disabled={updateCommentLoading}
+                            className="px-2 border-2 py-1 rounded-lg text-white transition-all duration-300  border-[#00687A] bg-[#00687A] cursor-pointer disabled:cursor-not-allowed disabled:bg-[#00687A] disabled:hover:bg-[#00687A] hover:bg-[#00687ada]"
+                            onClick={() => updateComment(comment.id)}
+                          >
+                            {updateCommentLoading ? (
+                              <Loader2
+                                className="animate-spin text-white"
+                                size={24}
+                              />
+                            ) : (
+                              "Save"
+                            )}
                           </button>
                         </div>
                       </div>
@@ -454,7 +482,7 @@ export default function () {
                         onClick={() => toggleComments(comment.id)}
                         className={`max-w-[900px] cursor-pointer  mx-4 whitespace-pre-wrap break-words text-[#191C1E] ${jetbrains.className} my-2 ${expandComments.includes(comment.id) ? "" : "truncate line-clamp-4"}`}
                       >
-                        {comment.content}  
+                        {comment.content}
                       </div>
                     )}
                   </div>
@@ -496,6 +524,15 @@ export default function () {
           </div>
         </div>
       )}
+      <DeleteCommentModal
+        isOpen={isDeleteOpen}
+        onDelete={ async() => {
+          if (selectedCommentId) {
+            await deleteComment(selectedCommentId);
+          }
+        }}
+        onClose={() => setIsDeleteOpen(false)}
+      />
     </>
   );
 }
