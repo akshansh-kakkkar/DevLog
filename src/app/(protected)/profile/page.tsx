@@ -45,8 +45,8 @@ export default function overView() {
         setStatsLoading(false)
       }
     } 
-
-  })
+    getStats()
+  }, [])
     const formatNumber = (num: number) => {
     return new Intl.NumberFormat("en", {
       notation: "compact",
@@ -56,7 +56,9 @@ export default function overView() {
   return (
     <div className=" bg-[#F7F9FB] ">
       {statsLoading?(
+        <div className="flex justify-center w-full h-[70vh] items-center">
         <Loader2 size={64} className="animate-spin text-[#00687A]" />
+        </div>
       ) : (
 
       <div className="flex md:mx-22 flex-col gap-8">
@@ -219,7 +221,7 @@ export default function overView() {
                 <div><BookText className="text-[#76777D]" /></div>
               </div>
               <div className={`${geist.className} text-[#00687A] text-7xl`}>
-                {stats.totalPosts}
+                {stats.totalPosts || 0}
               </div>
             </div>
             <div className="bg-whtie w-full border-1 flex gap-12 flex-col border-[#C6C6CD] p-6 rounded-xl">

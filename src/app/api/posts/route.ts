@@ -71,6 +71,7 @@ export async function GET(request: Request) {
         currentPage: page,
         totalPosts,
         totalPages: Math.ceil(totalPosts / limit),
+        hasMore : page * limit < totalPosts,
       },
     });
   } catch (error) {

@@ -122,7 +122,7 @@ export default function Navbar() {
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem>
                     <Link
-                      href={"/dashboard"}
+                      href={"/dashboard/analytics"}
                       className="flex justify-between items-center gap-5"
                     >
                       <span>

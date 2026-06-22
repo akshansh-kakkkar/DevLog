@@ -3,9 +3,11 @@ import { Bookmark, ChevronRight, Loader2, Rss, Search } from "lucide-react";
 import { JetBrains_Mono, Libertinus_Sans, Poppins } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { toast } from "sonner";
+import page from '../../../contact/page';
+import { Post } from "@/app/Types";
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["600"],
@@ -22,15 +24,26 @@ const poppins2 = Poppins({
   weight: ['400']
 })
 export default function Page() {
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(false);
+    const [page, setPage] = useState(1);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const loadMoreRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
-    const getPosts = async () => {
+    const getPosts = async (pageNumber = 1) => {
       try {
         setLoading(true);
-        const response = await fetch("/api/posts");
+        const response = await fetch(`/api/posts?page=${pageNumber}&limit=2`);
         const data = await response.json();
+        if(pageNumber ===1){
         setPosts(data.posts);
+        }
+        else{
+          setPosts(prev => [...prev, ...data.posts])
+        }
+        setHasMore(data.pagination.hasMore)
       } catch (error) {
         return toast.error("something went wrong.");
       } finally {
@@ -39,7 +52,27 @@ export default function Page() {
     };
     getPosts();
   }, []);
-
+  useEffect(()=>{
+    const observer = new IntersectionObserver(
+      async ([entry]) =>{
+        if(
+          entry.isIntersecting && hasMore && !loadingMore
+        ){
+          setLoadingMore(true)
+          const nextPage = page + 1;
+          await getPosts(nextPage);
+          setPage(nextPage);
+          setLoadingMore(false)
+        }
+      }, {
+        threshold : 0.1
+      }
+    )
+    if(!loadMoreRef.current){
+      observer.observe(loadMoreRef.current)
+    }
+    return observer.disconnect()
+  }, [page, hasMore, loadMoreRef])
   return (
     <>
       {loading ? (

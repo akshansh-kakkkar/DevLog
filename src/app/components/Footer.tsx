@@ -21,7 +21,7 @@ export default function Footer(){
                     <li><Link href={'https://www.github.com/akshansh-kakkkar'} className={`underline-offset-2 hover:text-black hover:underline ${Pathname === 'https://www.github.com/akshansh-kakkkar' ? "underline underline-offset-2" : ""}`} target="_blank" rel="noopener noreferrer">Github</Link></li>
                     <li><Link className={`underline-offset-2 ${Pathname === "/about" ? "underline underline-offset-2" : ""} hover:text-black hover:underline`} href={'/about'}>About</Link></li>
                     <li><Link className={`hover:text-black hover:underline underline-offset-2 ${Pathname === '/contact' ? "underline underline-offset-2" :""}`} href={'/contact'}>Contact</Link></li>
-                    <li><Link className={`hover:text-black hover:underline underline-offset-2 ${Pathname === '/posts' ? "underline underline-offset-2" : ""}`} href={'/posts'}>Posts</Link></li>
+                    <li><Link className={`hover:text-black hover:underline underline-offset-2 ${Pathname === '/posts' ? "underline underline-offset-2" : ""}`} href={'/dashboard/post'}>Posts</Link></li>
                 </ul>
             </div>
         </div>
