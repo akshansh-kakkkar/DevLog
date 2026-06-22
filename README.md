@@ -1,36 +1,74 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Devlog
+A social media platform made by developer for developers
 
-## Getting Started
+## Description
+It is a developer social media platform where developers can post their daily developer logs.
 
-First, run the development server:
+## Features
+- Authentication system
+- Profile Overview System
+- Post Statistics system
+- Users can add their social links
+- Users can edit their profile
+- Users can add a custom avatar
+- Users can change their email 
+- Users can change their passwords
+- Users can see and revoke their active session
+- Users recieve a security email on password or email change
+- Users can delete their accounts
+- Users can create posts
+- Users can read posts
+- Users can delete posts
+- Users can see their overall analytics
+- Users can scroll feed
+- Users can schedule the posts
+- Users can set the visibility of the posts
+- Users can like each others post
+- Users can comments on each others posts
+- Users can edit their comments on the posts
+- Users can add images to the the post 
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Tech Stack
+- Postgresql (DB)
+- Prisma (ORM)
+- TypeScript 
+- Next.js
+- TailwindCss
+- neondb
+- cloudinary
+
+## Installation
+
+#### Clone the repository
+```
+ git clone https://github.com/akshansh-kakkkar/DevLog.git 
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Install dependencies
+```
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Create .env in the root project
+```
+DATABASE_URL=
+BETTER_AUTH_SECRET=
+BETTER_AUTH_URL=
+GOOGLE_CLIENT_SECRET=
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=4
+CLOUDINARY_SECRET_KEY=
+GITHUB_CLIENT_ID=
+GITHUB_SECRET_KEY=
+CRON_SECRET=
+VERCEL_URL=
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Run the Project
 
-## Learn More
+```
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+and all set!
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

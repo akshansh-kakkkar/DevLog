@@ -59,8 +59,8 @@ export default function Navbar() {
               </li>
               <li>
                 <Link
-                  className={`transition-all px-2 duration-300 ${Pathname === "/posts" ? "rounded-xs  underline underline-offset-3 " : ""}`}
-                  href={"/posts"}
+                  className={`transition-all px-2 duration-300 ${Pathname === "/dashboard/post" ? "rounded-xs  underline underline-offset-3 " : ""}`}
+                  href={"/dashboard/post"}
                 >
                   Feed
                 </Link>
@@ -235,8 +235,8 @@ export default function Navbar() {
                     </li>
                     <li>
                       <Link
-                        href={"/posts"}
-                        className={`${Pathname === "/posts" ? "underline rounded-sm underline-offset-3 px-2 " : ""}`}
+                        href={"/dashboard/post"}
+                        className={`${Pathname === "/dashboard/post" ? "underline rounded-sm underline-offset-3 px-2 " : ""}`}
                       >
                         Feed
                       </Link>

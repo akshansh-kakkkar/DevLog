@@ -327,7 +327,7 @@ export default function Security() {
                 type="text"
                 placeholder="new@example.com"
               />
-            </div>w
+            </div>
 
             <div className="flex flex-col gap-2">
               <label

@@ -146,7 +146,7 @@ function HeroContent() {
         <motion.div whileHover={{ scale: 0.95 }} whileTap={{ scale: 1.1 }}>
           <Link
             className={`border-[#191c1e] flex text-2xl md:text-3xl text-[#191C1E] border-2 px-6 rounded-sm p-4 ${LibertinusSerif.className}`}
-            href={"/dashboard/about"}
+            href={"/dashboard/feed"}
           >
             <div className="flex gap-7 justify-center items-center group">
               <span>Explore Feed</span>{" "}
