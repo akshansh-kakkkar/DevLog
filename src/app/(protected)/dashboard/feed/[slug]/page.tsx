@@ -10,6 +10,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { JetBrains_Mono, Libertinus_Sans, Poppins } from "next/font/google";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -233,7 +234,8 @@ export default function () {
         <div className="mt-12  mx-5 md:mx-12 lg:mx-22 flex gap-7 flex-col">
           <div className="flex justify-between items-center ">
             <div className="flex items-center  gap-2">
-              <div className="w-12 h-12 rounded-full flex justify-center items-center text-center border-[#00687A] border-2 bg-[#00687A] relative">
+              
+              <Link href={`/dashboard/users/${post.author.id}`} className="w-12 h-12 cursor-pointer rounded-full flex justify-center items-center text-center border-[#00687A] border-2 bg-[#00687A] relative">
                 {post.author.image ? (
                   <Image
                     className="absolute  rounded-full"
@@ -248,12 +250,13 @@ export default function () {
                     {post.author.name.charAt(0).toUpperCase()}
                   </div>
                 )}
-              </div>
-              <div
-                className={`${jetbrains.className} capitalize  text-[#191C1E] p-1 rounded-sm text-xl  font-bold `}
+              </Link>
+              <Link 
+              href={`/dashboard/users/${post.author.id}`}
+                className={`${jetbrains.className} capitalize hover:underline cursor-pointer  text-[#191C1E] p-1 rounded-sm text-xl  font-bold `}
               >
                 {post.author.name}
-              </div>
+              </Link>
               <div>
                 <Dot className="text-gray-400 " size={42} />
               </div>
@@ -391,8 +394,8 @@ export default function () {
                     <div className="flex flex-col">
                       <div className="flex justify-between">
                         <div className="flex gap-2 items-center text-center">
-                          <div
-                            className={`${jetbrains.className} w-8 h-8 flex items-center text-center justify-center relative text-xl bg-[#00687A] px-2 font-semibold text-white rounded-full`}
+                          <Link href={`/dashboard/users/${comment.author.id}`}
+                            className={`${jetbrains.className} cursor-pointer w-8 h-8 flex items-center text-center justify-center relative text-xl bg-[#00687A] px-2 font-semibold text-white rounded-full`}
                           >
                             {comment.author.image ? (
                               <Image
@@ -406,13 +409,13 @@ export default function () {
                                 {comment.author.name.charAt(0).toUpperCase()}
                               </div>
                             )}
-                          </div>
+                          </Link>
                           <div className="flex text-left flex-col">
-                            <div
-                              className={`font-semibold text-lg capitalize text-[#191C1E]`}
+                            <Link href={`/dashboard/users/${comment.author.id}`}
+                              className={`font-semibold cursor-pointer hover:underline text-lg capitalize text-[#191C1E]`}
                             >
                               {comment.author.name}
-                            </div>
+                            </Link>
                             <div
                               className={`text-[#45464D] text-sm  text-left`}
                             >

@@ -95,7 +95,7 @@ export default function Page() {
             <span>Feed</span>
           </div>
           <div className="w-full flex lg:mx-12 items-center">
-            <div className="flex text-lg flex-col justify-center w-full mr-32 mr-0 relative  lg:w-1/2  bg-[#F2F4F6] border  px-4 py-2 rounded-md border-[#c6c6CD] b">
+            <div  className="flex text-lg flex-col justify-center w-full mr-32 mr-0 relative  lg:w-1/2  bg-[#F2F4F6] border  px-4 py-2 rounded-md border-[#c6c6CD] b">
               <input
                 type="text"
                 className={`outline-none pr-10 ${libretinusSans.className} text-[#191C1E] font-medium`}
@@ -104,11 +104,11 @@ export default function Page() {
               <button
                 type="button"
                 onClick={() =>
-                  toast.success("I will make this part function soon")
+                  toast.error("This feature is currently unavailable")
                 }
                 className="cursor-pointer absolute right-2 top-2.5 text-[#5c5c5c] "
               >
-                <Search className="" strokeWidth={2} />
+                <Search  className="" strokeWidth={2} />
               </button>
             </div>
           </div>
@@ -121,7 +121,7 @@ export default function Page() {
                       <div className="flex justify-between gap-2 items-center ">
                         <div className="flex gap-2 items-center">
                           {post.author.image ? (
-                            <div className="w-[48px] h-[48px] relative rounded-xl border-2  border-[#00687A]">
+                            <Link href={`dashboard/users/${post.author.id}`} className="w-[48px]  h-[48px] relative rounded-xl border-2  border-[#00687A]">
                               <Image
                                 fill
                                 sizes="48px"
@@ -129,20 +129,22 @@ export default function Page() {
                                 src={post.author.image}
                                 alt={post.author.name}
                               />
-                            </div>
+                            </Link>
                           ) : (
-                            <div
+                            <Link
+                            href={`/dashboard/users/${post.author.id}`}
                               className={`bg-[#00687A] group w-[48px] h-[48px] rounded-lg text-white flex justify-center items-center text-4xl font-medium ${poppins.className}`}
                             >
                               {post.author.name.charAt(0).toUpperCase()}
-                            </div>
+                            </Link>
                           )}
                           <div className="flex flex-col ">
-                            <div
-                              className={`${libretinusSans.className} text-[#191C1E] font-semibold text-sm`}
+                            <Link
+                            href={`/dashboard/users/${post.author.id}`}
+                              className={`${libretinusSans.className} cursor-pointer hover:underline text-[#191C1E] font-semibold text-xl capitalize`}
                             >
                               {post.author.name}
-                            </div>
+                            </Link>
                             <div
                               className={`${jetbrains.className} text-gray-500 text-xs`}
                             >

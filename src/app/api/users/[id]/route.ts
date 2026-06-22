@@ -21,6 +21,7 @@ export async function GET(
         email: true,
         bio : true,
         location:true,
+        image : true,
         github : true,
         Linkdin : true,
         Instagram : true,
