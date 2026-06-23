@@ -71,4 +71,5 @@ npm run dev
 ```
 
 and all set!
-note : *The AI is used for research purposes only*
+
+>note : *The AI is used for research purposes only*
